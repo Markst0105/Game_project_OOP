@@ -9,6 +9,7 @@ package Modelo;
  * @author marks
  */
 import Controler.Tela;
+import java.awt.Point;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.io.File;
@@ -16,37 +17,45 @@ import java.util.List;
 import javax.swing.*;
 
 public class DragDropHandler extends TransferHandler implements DropTargetListener {
-    private final Tela gameWindow;
-
-    public DragDropHandler(Tela window) {
-        this.gameWindow = window;
+    private final Tela tela;
+    
+    public DragDropHandler(Tela tela) {
+        this.tela = tela;
     }
-
+    
     @Override
     public void drop(DropTargetDropEvent dtde) {
         try {
-            Transferable tr = dtde.getTransferable();
-            if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-                dtde.acceptDrop(DnDConstants.ACTION_COPY);
-                List<File> files = (List<File>) tr.getTransferData(DataFlavor.javaFileListFlavor);
-                
+            dtde.acceptDrop(DnDConstants.ACTION_COPY);
+            Transferable transferable = dtde.getTransferable();
+
+            if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                List<File> files = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
+
                 for (File file : files) {
-                    if (file.getName().endsWith(".zip")) {
-                        // Convert mouse position to game grid
-                        java.awt.Point dropPoint = dtde.getLocation();
-                        int col = (dropPoint.x - gameWindow.getInsets().left) / Auxiliar.Consts.CELL_SIDE + gameWindow.getCameraColuna();
-                        int row = (dropPoint.y - gameWindow.getInsets().top) / Auxiliar.Consts.CELL_SIDE + gameWindow.getCameraLinha();
-                        
-                        List<Personagem> newChars = CharacterImporter.importFromZip(file.getPath(), row, col);
-                        newChars.forEach(gameWindow::addPersonagem);
+                    if (file.getName().toLowerCase().endsWith(".zip")) {
+                        Point dropPoint = dtde.getLocation();
+                        int row = (dropPoint.y - tela.getInsets().top) / Auxiliar.Consts.CELL_SIDE + tela.getCameraLinha();
+                        int col = (dropPoint.x - tela.getInsets().left) / Auxiliar.Consts.CELL_SIDE + tela.getCameraColuna();
+
+                        SwingUtilities.invokeLater(() -> {
+                            try {
+                                List<Personagem> importedChars = CharacterImporter.importFromZip(
+                                    file.getAbsolutePath(), row, col);
+                                tela.addCharacters(importedChars);
+                                tela.repaint();
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        });
+                        break;
                     }
                 }
-                dtde.dropComplete(true);
-                gameWindow.repaint();
             }
+            dtde.dropComplete(true);
         } catch (Exception ex) {
-            dtde.rejectDrop();
-            System.err.println("Import failed: " + ex.getMessage());
+            dtde.dropComplete(false);
+            ex.printStackTrace();
         }
     }
 

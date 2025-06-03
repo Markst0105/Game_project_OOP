@@ -1,15 +1,17 @@
 package Controler;
 
 import Auxiliar.Desenho;
+import Modelo.Bomb;
 import Modelo.Button;
-import Modelo.Caveira;
+import Modelo.CaveiraR;
 import Modelo.Chaser;
 import Modelo.FinishPoint;
-import Modelo.Fogo;
+import Modelo.FogoR;
 import Modelo.Personagem;
 import Modelo.Hero;
 import auxiliar.Posicao;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ControleDeJogo {
     private boolean gameOver = false;
@@ -21,11 +23,16 @@ public class ControleDeJogo {
     
     public void desenhaTudo(ArrayList<Personagem> e) {
         // Draw all elements except hero first
+        
         Hero hero = null;
         for (Personagem p : e) {
             if (p instanceof Hero) {
                 hero = (Hero) p;
             } else {
+                // Check if the character is a bomb and has vanished
+                if (p instanceof Bomb && ((Bomb)p).hasVanished()) {
+                    continue; // Skip drawing vanished bombs
+                }
                 p.autoDesenho();
             }
         }
@@ -37,11 +44,34 @@ public class ControleDeJogo {
     }
     
     public void processaTudo(ArrayList<Personagem> umaFase) {
-        Hero hero = (Hero) umaFase.get(0);
-        boolean heroOnButton = false;
-        if (gameOver || !hero.isAlive()) {
-            return;
+        // First find the hero in the list
+        Hero hero = null;
+        for (Personagem p : umaFase) {
+            if (p instanceof Hero) {
+                hero = (Hero) p;
+                break;
+            }
         }
+        
+        // Create a copy of the list to avoid concurrent modification
+        List<Personagem> copy;
+        synchronized(umaFase) {
+            copy = new ArrayList<>(umaFase);
+        }
+
+        // Process the copy instead of the original
+        for (Personagem p : copy) {
+            if (p instanceof Hero) {
+                hero = (Hero) p;
+                break;
+            }
+        }
+        
+        if (hero == null || gameOver || !hero.isAlive()) {
+            return;
+        }   
+        
+        boolean heroOnButton = false;
         
         // Check all buttons
         for (Personagem p : umaFase) {
@@ -53,25 +83,12 @@ public class ControleDeJogo {
                 }
             }
         }
-        
-//        boolean heroOnButton = false;
-//    
-//        // Check button presses
-//        for (Personagem p : umaFase) {
-//            if (p instanceof Button) {
-//                if (hero.getPosicao().igual(p.getPosicao())) {      //if player leaves button door closes
-//                    ((Button) p).activate();
-//                    heroOnButton = true;
-//                } else {
-//                    ((Button) p).deactivate();
-//                }
-//            }
-//        }
-        
-        for (int i = 1; i < umaFase.size(); i++) {
-            Personagem p = umaFase.get(i);
 
-            if (hero.getPosicao().igual(p.getPosicao())) {
+        // Check all collisions
+        for (int i = 0; i < umaFase.size(); i++) {
+            Personagem p = umaFase.get(i);
+            
+            if (p != hero && hero.getPosicao().igual(p.getPosicao())) {
                 if (p instanceof FinishPoint) {
                     // Level completed!
                     Tela tela = Desenho.acessoATelaDoJogo();
@@ -82,39 +99,68 @@ public class ControleDeJogo {
             }
         }
         
-        for (int i = 1; i < umaFase.size(); i++) {
-            Personagem p = umaFase.get(i);
-            
-            // Check for collision with hero
+        ArrayList<Personagem> copiaDaFase = new ArrayList<>(umaFase);
+        for (Personagem p : copiaDaFase) {
+            // Skip processing if the character is the hero itself or a vanished bomb
+            if (p == hero || (p instanceof Bomb && ((Bomb)p).hasVanished())) {
+                continue;
+            }
+
             if (hero.getPosicao().igual(p.getPosicao())) {
-                handleCollision(hero, p);
+                if (p instanceof FinishPoint) {
+                    Tela tela = Desenho.acessoATelaDoJogo();
+                    tela.nextLevel();
+                    return; // Level changes, stop processing current frame
+                }
+                // Pass the original 'p' from 'umaFase' if needed for modifications,
+                // but here 'p' from 'copiaDaFase' is fine as we call methods on it.
+                handleCollision(hero, p); 
+                
+                // If hero died from collision, stop further processing for this frame
+                if (gameOver || !hero.isAlive()) {
+                    return;
+                }
             }
         }
         
         // Process chasers' movement
-        for (int i = 1; i < umaFase.size(); i++) {
-            Personagem p = umaFase.get(i);
+        for (Personagem p : umaFase) {
             if (p instanceof Chaser) {
-                ((Chaser) p).computeDirection(hero.getPosicao());
+                Chaser chaser = (Chaser) p;
+                chaser.computeDirection(hero.getPosicao());
+                chaser.autoDesenho();
             }
         }
     }
+    
     
     private void handleCollision(Hero hero, Personagem other) {
         // Check if the other object is dangerous
         if (hero.isInvincible()) {
             return;
         }
+        boolean heroTookDamage = false;
         
-        if (other.isbMortal() || 
-            other instanceof Caveira || 
-            other instanceof Fogo || 
-            other instanceof Chaser) {
+        if (other instanceof Bomb) {
+            Bomb bomb = (Bomb) other;
+            if (!bomb.isExploded()) {
+                bomb.explode(); // Bomb explodes when touched
+                
+                // Hero loses a life only if not invincible
+                if (!hero.isInvincible()) {
+                    hero.loseLife();
+                    heroTookDamage = true;
+                }
+            }
+        } else if (other.isbMortal() || 
+                   other instanceof CaveiraR || 
+                   other instanceof FogoR || 
+                   other instanceof Chaser) {
             
-            hero.loseLife();
-            
-            if (!hero.isAlive()) {               
-                gameOver = true;
+            // Hero loses life only if not invincible
+            if (!hero.isInvincible()) {
+                hero.loseLife();
+                heroTookDamage = true;
             }
         }
     }
@@ -122,8 +168,8 @@ public class ControleDeJogo {
     /*Retorna true se a posicao p é válida para Hero com relacao a todos os personagens no array*/
     public boolean ehPosicaoValida(ArrayList<Personagem> umaFase, Posicao p) {
         // First check map borders
-        if (p.getLinha() <= 0 || p.getLinha() >= Auxiliar.Consts.MUNDO_ALTURA - 1 ||
-            p.getColuna() <= 0 || p.getColuna() >= Auxiliar.Consts.MUNDO_LARGURA - 1) {
+        if (p.getLinha() < 0 || p.getLinha() >= Auxiliar.Consts.MUNDO_ALTURA ||
+            p.getColuna() < 0 || p.getColuna() >= Auxiliar.Consts.MUNDO_LARGURA) {
             return false;
         }
 

@@ -81,10 +81,14 @@ public class LevelLoader {
                 ZigueZague zzEnemy = new ZigueZague(image);
                 zzEnemy.setPosicao(position.getLinha(), position.getColuna());
                 return zzEnemy;
-            case "Caveira":
-                Caveira skull = new Caveira(image);
+            case "CaveiraR":
+                CaveiraR skull = new CaveiraR(image);
                 skull.setPosicao(position.getLinha(), position.getColuna());
                 return skull;
+            case "CaveiraL":
+                CaveiraL skull2 = new CaveiraL(image);
+                skull2.setPosicao(position.getLinha(), position.getColuna());
+                return skull2;
             case "Chaser":
                 Chaser chaser = new Chaser(image);
                 chaser.setPosicao(position.getLinha(), position.getColuna());

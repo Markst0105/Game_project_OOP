@@ -6,15 +6,17 @@
         <group>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/Personagem.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Controler/Tela.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/Hero.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Controler/ControleDeJogo.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/GameLevel.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/LevelLoader.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Auxiliar/Posicao.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/CharacterImporter.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Main.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/CharacterExporter.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/LevelManager.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/FinishPoint.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/Chaser.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/SaveState.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Controler/ControleDeJogo.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/CaveiraR.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/FogoR.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/LevelLoader.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/CaveiraL.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Main.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/FogoL.java</file>
         </group>
     </open-files>
 </project-private>

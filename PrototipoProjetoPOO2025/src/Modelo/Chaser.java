@@ -23,7 +23,7 @@ public class Chaser extends Personagem implements Serializable {
         setPosicao(startRow, startCol);
         this.bMortal = true;
         this.bTransponivel = true;
-        this.speedDelay = 3;
+        this.speedDelay = 8;
     }
 
     public Chaser(String sNomeImagePNG) {
@@ -31,11 +31,10 @@ public class Chaser extends Personagem implements Serializable {
         iDirectionV = true;
         iDirectionH = true;
         this.bMortal = true;
-        this.speedDelay = 3;
+        this.speedDelay = 8;
         this.bTransponivel = true;
     }
-    
-    
+
     public int getSpeed() {
         return speedDelay;
     }
@@ -55,7 +54,7 @@ public class Chaser extends Personagem implements Serializable {
 
     public void autoDesenho() {
         moveCounter++;
-        if (moveCounter >= speedDelay) {
+        if (moveCounter > speedDelay) {
             moveCounter = 0;
             
             // Only move when counter reaches speedDelay

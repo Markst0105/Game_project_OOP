@@ -16,27 +16,30 @@ import java.util.ArrayList;
  */
 public class SaveState implements Serializable {
     
-    private ArrayList<GameLevel> levels;
-    private int currentLevelIndex;
+    private static final long serialVersionUID = 1L;
+    
+    private int currentLevel;
     private Hero heroState;
+    private int heroLives;
     
-    public SaveState(ArrayList<GameLevel> levels, int currentLevelIndex, Hero hero) {
-        this.levels = levels;
-        this.currentLevelIndex = currentLevelIndex;
-        this.heroState = hero;
+    public SaveState(int currentLevel, Hero hero) {
+        this.currentLevel = currentLevel;
+        this.heroState = new Hero("robbo.png", 
+                                hero.getPosicao().getLinha(), 
+                                hero.getPosicao().getColuna());
+        this.heroLives = hero.getLives();
     }
     
-    
-    
-    // Getters
-    public ArrayList<GameLevel> getLevels() {
-        return levels; 
+    public int getCurrentLevel() {
+        return currentLevel;
     }
-    public int getCurrentLevelIndex() { 
-        return currentLevelIndex; 
+    
+    public Hero getHeroState() {
+        return heroState;
     }
-    public Hero getHeroState() { 
-        return heroState; 
+    
+    public int getHeroLives() {
+        return heroLives;
     }
     
 }

@@ -1,7 +1,7 @@
 package Controler;
 
 import Modelo.Personagem;
-import Modelo.Caveira;
+import Modelo.CaveiraR;
 import Modelo.Hero;
 import Modelo.Chaser;
 import Modelo.BichinhoVaiVemHorizontal;
@@ -9,6 +9,7 @@ import Auxiliar.Consts;
 import Auxiliar.Desenho;
 import Modelo.BichinhoVaiVemVertical;
 import Modelo.Button;
+import Modelo.CharacterExporter;
 import Modelo.CharacterImporter;
 import Modelo.Door;
 import Modelo.DragDropHandler;
@@ -16,7 +17,10 @@ import Modelo.FinishPoint;
 import Modelo.ZigueZague;
 import Modelo.GameLevel;
 import Modelo.LevelLoader;
+import Modelo.LevelManager;
 import Modelo.SaveState;
+import Modelo.TiledMapReader;
+import Modelo.VisualTile;
 import Modelo.Wall;
 import auxiliar.Posicao;
 import java.awt.Color;
@@ -57,10 +61,13 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+// the problem is in the class, it has to be a paiting so that the objects can spawn on it
+// make respawn be in the same level
+
 public class Tela extends javax.swing.JFrame implements KeyListener {
 
     private Hero hero;
-    private ArrayList<Personagem> faseAtual;
+    private final ArrayList<Personagem> faseAtual;
     private ControleDeJogo cj = new ControleDeJogo();
     private Graphics g2;
     private int cameraLinha = 0;
@@ -70,126 +77,78 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     private ArrayList<GameLevel> allLevels; // Store all levels
     private int currentLevelIndex = 0; // Track current level
     private boolean gameCompleted = false;
+    private final List<Personagem> personagensToAdd = new ArrayList<>();
+    private final List<Personagem> personagensToRemove = new ArrayList<>();
     
 
     public Tela() {
-        
+      
         Desenho.setCenario(this);
         initComponents();
         this.addKeyListener(this);
         this.setSize(Consts.RES * Consts.CELL_SIDE + getInsets().left + getInsets().right,
                 Consts.RES * Consts.CELL_SIDE + getInsets().top + getInsets().bottom);
 
-        // Initialize collections
         faseAtual = new ArrayList<>();
-        allLevels = new ArrayList<>();
-        levels = new ArrayList<>();
-
-        // Create game elements
-        createMapBorders();
-        initializeDefaultLevels();
-        loadLevel(0);
-
-        // Start game
+        currentLevel = 1;
+        loadCurrentLevel();
         atualizaCamera();
         new DropTarget(this, new DragDropHandler(this));
               
     }
     
-    private void loadAllLevels() {
-        levels = new ArrayList<>(); // Create new list instead of clearing
-        int levelCount = 1;
+    private void loadCurrentLevel() {
+        try {
+            TiledMapReader.clearVisualTiles(); // Clear previous visual tiles
+            faseAtual.clear();
+            LevelManager.loadLevel(currentLevel, faseAtual);
+            hero = findHero();
 
-        while (true) {
-            try {
-                GameLevel level = LevelLoader.loadLevel(levelCount);
-                levels.add(level);
-                levelCount++;
-            } catch (IOException e) {
-                break;
-            }
+            atualizaCamera();
+            repaint();
+        } catch (Exception e) {
+            System.err.println("Error loading level " + currentLevel + ": " + e.getMessage());
+            JOptionPane.showMessageDialog(this, 
+                "Failed to load level " + currentLevel + "\n" + e.getMessage(),
+                "Level Error", 
+                JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         }
-
-        if (levels.isEmpty()) {
-            initializeDefaultLevels();
-        }
-       
     }
     
-    private void initializeDefaultLevels() {
-        // Create default levels if file loading fails
-        GameLevel level1 = new GameLevel(1);
+
+    public void addPersonagem(Personagem umPersonagem) {
+        synchronized (personagensToAdd) { // Synchronize access if multiple threads could call this
+            personagensToAdd.add(umPersonagem);
+        }
+    }
+
+    public void removePersonagem(Personagem umPersonagem) {
+        synchronized (personagensToRemove) { // Synchronize access
+            personagensToRemove.add(umPersonagem);
+        }
+    }
     
-        // Create door and button
-        Door door = new Door("Grade.png", 1); 
-        door.setPosicao(10, 5);
-        
-
-        Button button = new Button("Botao.png"); 
-        button.addLinkedDoor(door);
-        button.setPosicao(5, 5);
-
-        // Add elements to level
-        Hero hero = new Hero("Robbo.png");
-        hero.setPosicao(2, 7);
-               
-        level1.addElement(hero);
-        level1.addElement(door);
-        level1.addElement(button);
-        
-
-        // Add other elements...
-        level1.addElement(new BichinhoVaiVemHorizontal("roboPink.png", 3, 3));
-        level1.addElement(new FinishPoint("finish.png", 15, 15));
-
-        levels.add(level1);
-        
-        // Add more default levels as needed...
-        
-        
-        GameLevel level2 = new GameLevel(2);
-        
-        
-        
-        level2.addElement(new Hero("robbo.png", 1, 1));
-        level2.addElement(new Chaser("Chaser.png", 20, 3));
-        Door door2 = new Door("Grade.png", 2, 14, 14); 
-        Door door3 = new Door("Grade.png", 3, 14, 15);
-        Door door4 = new Door("Grade.png", 4, 14, 16);
-        Door door5 = new Door("Grade.png", 5, 15, 16);
-        Door door6 = new Door("Grade.png", 6, 16, 16);
-        Door door7 = new Door("Grade.png", 7, 16, 15);
-        Door door8 = new Door("Grade.png", 8, 16, 14);
-        Door door9 = new Door("Grade.png", 9, 15, 14);
-               
-
-        Button button2 = new Button("Botao.png"); 
-        button2.addLinkedDoor(door2);
-        button2.addLinkedDoor(door3);
-        button2.addLinkedDoor(door4);
-        button2.addLinkedDoor(door5);
-        button2.addLinkedDoor(door6);
-        button2.addLinkedDoor(door7);
-        button2.addLinkedDoor(door8);
-        button2.addLinkedDoor(door9);
-        
-        button2.setPosicao(10, 10);
-        
-        level2.addElement(door2);
-        level2.addElement(door3);
-        level2.addElement(door4);
-        level2.addElement(door5);
-        level2.addElement(door6);
-        level2.addElement(door7);
-        level2.addElement(door8);
-        level2.addElement(door9);
-        
-        level2.addElement(button2);
-        
-        level2.addElement(new FinishPoint("finish.png", 15, 15));
-        
-        levels.add(level2);
-        
+     // Thread-safe way to get the current characters
+    public synchronized List<Personagem> getFaseAtual() {
+        return new ArrayList<>(faseAtual); // Returns a copy for thread safety
+    }
+    
+    // Thread-safe way to add characters
+    public synchronized void addCharacters(List<Personagem> characters) {
+        faseAtual.addAll(characters);
+    }
+    
+    // Thread-safe way to clear/reset
+    public synchronized void clearFaseAtual() {
+        faseAtual.clear();
+    }
+    
+    private Hero findHero() {
+        return (Hero) faseAtual.stream()
+                .filter(p -> p instanceof Hero)
+                .findFirst()
+                .orElse(null);
     }
     
     private void loadLevel(int levelIndex) {
@@ -197,7 +156,10 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
             faseAtual.clear();
             faseAtual.addAll(levels.get(levelIndex).getElements());
             currentLevel = levelIndex;
-            hero = (Hero)faseAtual.get(0); // Update hero reference
+            hero = findHero();
+            if (hero == null) {
+                throw new RuntimeException("Hero not found in level");
+            }
             atualizaCamera();
         }
     }
@@ -205,82 +167,62 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     
     private void saveGame() {
         try (ObjectOutputStream out = new ObjectOutputStream(
-                new FileOutputStream("savegame.dat"))) {
+            new FileOutputStream("savegame.dat"))) {
 
-            // Create a deep copy of hero to avoid saving references
-            Hero savedHero = new Hero("Robbo.png");
-            savedHero.setPosicao(hero.getPosicao().getLinha(), hero.getPosicao().getColuna());
-            savedHero.setLives(hero.getLives());
-
-            SaveState state = new SaveState(levels, currentLevelIndex, savedHero);
+            // Save current level and hero state
+            SaveState state = new SaveState(currentLevel, hero);
             out.writeObject(state);
-            System.out.println("Game saved successfully!");
+
+            System.out.println("Game saved successfully for level " + currentLevel);
         } catch (IOException e) {
             System.err.println("Failed to save game: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, 
+                "Failed to save game progress",
+                "Save Error", 
+                JOptionPane.ERROR_MESSAGE);
         }
     }
     
     private void loadGame() {
         try (ObjectInputStream in = new ObjectInputStream(
-                new FileInputStream("savegame.dat"))) {
+            new FileInputStream("savegame.dat"))) {
 
             SaveState state = (SaveState) in.readObject();
-            this.levels = state.getLevels();
-            this.currentLevelIndex = state.getCurrentLevelIndex();
 
-            // Load the level
-            loadLevel(currentLevelIndex);
+            // Load the saved level
+            this.currentLevel = state.getCurrentLevel();
+            loadCurrentLevel();
 
             // Restore hero state
-            Hero loadedHero = state.getHeroState();
-            this.hero.setPosicao(loadedHero.getPosicao().getLinha(), loadedHero.getPosicao().getColuna());
-            this.hero.setLives(loadedHero.getLives());
+            Hero savedHero = state.getHeroState();
+            this.hero.setPosicao(savedHero.getPosicao().getLinha(), 
+                               savedHero.getPosicao().getColuna());
+            this.hero.setLives(state.getHeroLives());
 
-            System.out.println("Game loaded successfully!");
+            System.out.println("Game loaded successfully for level " + currentLevel);
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Failed to load game: " + e.getMessage());
-        }
-    }
-    
-    private void createMapBorders() {
-        // Top and bottom walls
-        for (int col = 0; col < Consts.MUNDO_LARGURA; col++) {
-            // Top wall
-            Wall topWall = new Wall("bricks.png");
-            topWall.setPosicao(0, col);
-            this.addPersonagem(topWall);
-
-            // Bottom wall
-            Wall bottomWall = new Wall("bricks.png");
-            bottomWall.setPosicao(Consts.MUNDO_ALTURA - 1, col);
-            this.addPersonagem(bottomWall);
-        }
-
-        // Left and right walls (skip corners since we already did them)
-        for (int row = 1; row < Consts.MUNDO_ALTURA - 1; row++) {
-            // Left wall
-            Wall leftWall = new Wall("wall.png");
-            leftWall.setPosicao(row, 0);
-            this.addPersonagem(leftWall);
-
-            // Right wall
-            Wall rightWall = new Wall("wall.png");
-            rightWall.setPosicao(row, Consts.MUNDO_LARGURA - 1);
-            this.addPersonagem(rightWall);
+            JOptionPane.showMessageDialog(this, 
+                "Failed to load saved game\nStarting new game",
+                "Load Error", 
+                JOptionPane.ERROR_MESSAGE);
+            restartGame(); // Fallback to new game
         }
     }
     
     public void nextLevel() {
-        if (gameCompleted) {
-            return; // Don't do anything if game is already complete
-        }
-        
-        if (currentLevel + 1 < levels.size()) {
-            loadLevel(currentLevel + 1);
+        if (currentLevel < LevelManager.getTotalLevels()) {
+            currentLevel++; // Increment to next level
+            loadCurrentLevel();
         } else {
-            gameCompleted = true;
-            showGameCompleteMessage(); // This will handle restart/exit
+            showGameCompleteMessage();
         }
+    }
+    
+    public void restartLevel() {
+        gameCompleted = false;
+        currentLevel = 1;
+        loadCurrentLevel();
     }
     
     private void showLevelCompleteMessage() {
@@ -308,6 +250,25 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
         });
     }
     
+    private void loadScenarioMap() {
+        try {
+            // Clear existing walls/scenario
+            faseAtual.removeIf(p -> p instanceof Wall);
+            
+            // Load new map
+            TiledMapReader.loadMap("levels/Mapa1.json", faseAtual);
+        } catch (IOException e) {
+            System.err.println("Failed to load map: " + e.getMessage());
+            // Fallback to default walls if needed
+        }
+    }
+    
+    // Call this when initializing or changing levels
+    public void initLevel() {
+        loadScenarioMap();
+        // Add your characters/objects here
+    }
+    
 
     public int getCameraLinha() {
         return cameraLinha;
@@ -319,14 +280,6 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
 
     public boolean ehPosicaoValida(Posicao p) {
         return cj.ehPosicaoValida(this.faseAtual, p);
-    }
-
-    public void addPersonagem(Personagem umPersonagem) {
-        faseAtual.add(umPersonagem);
-    }
-
-    public void removePersonagem(Personagem umPersonagem) {
-        faseAtual.remove(umPersonagem);
     }
 
     public Graphics getGraphicsBuffer() {
@@ -341,6 +294,17 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
         /**
          * ***********Desenha cenário de fundo*************
          */
+        
+        for (VisualTile tile : TiledMapReader.getVisualTiles()) {
+            tile.draw(g2, cameraColuna, cameraLinha, Consts.CELL_SIDE);
+        }
+
+        // 2. Then draw game objects
+        if (!this.faseAtual.isEmpty()) {
+            this.cj.desenhaTudo(faseAtual);
+            this.cj.processaTudo(faseAtual);
+        }
+        
         for (int i = 0; i < Consts.RES; i++) {
             for (int j = 0; j < Consts.RES; j++) {
                 int mapaLinha = cameraLinha + i;
@@ -382,9 +346,9 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
                         // Check if this is a border position
                         if (mapaLinha == 0 || mapaLinha == Consts.MUNDO_ALTURA - 1 ||
                             mapaColuna == 0 || mapaColuna == Consts.MUNDO_LARGURA - 1) {
-                            imageName = "Muro.png";
+                            imageName = "Muro2.png";
                         } else {
-                            imageName = "blackTile.png";
+                            imageName = "Tela-Fase1.png";
                         }
 
                         Image newImage = Toolkit.getDefaultToolkit().getImage(
@@ -403,31 +367,46 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
         
         /* Check game over state */
         if (cj.isGameOver()) {
-            // Draw semi-transparent overlay
+            // Draw game over screen
             g2.setColor(new Color(0, 0, 0, 180)); // Semi-transparent black
             g2.fillRect(0, 0, getWidth(), getHeight());
-
-            // Draw game over text
             g2.setColor(Color.RED);
             g2.setFont(new Font("Arial", Font.BOLD, 50));
             String gameOverText = "GAME OVER";
             int textWidth = g2.getFontMetrics().stringWidth(gameOverText);
-            g2.drawString(gameOverText, (getWidth() - textWidth)/2, getHeight()/2);
-
-            // Draw restart instruction
+            g2.drawString(gameOverText, (getWidth() - textWidth) / 2, getHeight() / 2);
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("Arial", Font.PLAIN, 20));
             String restartText = "Press R to restart";
             textWidth = g2.getFontMetrics().stringWidth(restartText);
-            g2.drawString(restartText, (getWidth() - textWidth)/2, getHeight()/2 + 50);
-        } else {
-            /* Draw game elements if not game over */
+            g2.drawString(restartText, (getWidth() - textWidth) / 2, getHeight() / 2 + 50);
+        } else if (gameCompleted) {
+            drawGameCompleteScreen(g2);
+        }
+        else {
+            // Draw normal game elements
             if (!this.faseAtual.isEmpty()) {
-                this.cj.desenhaTudo(faseAtual);
-                this.cj.processaTudo(faseAtual);
+                this.cj.desenhaTudo(faseAtual); // Iterates faseAtual
+                this.cj.processaTudo(faseAtual); // Iterates faseAtual or a copy
             }
             drawLivesCounter(g2);
         }
+        
+        synchronized (faseAtual) { // Synchronize direct access to faseAtual
+            if (!personagensToAdd.isEmpty()) {
+                synchronized (personagensToAdd) { // Synchronize access to the pending list
+                    faseAtual.addAll(personagensToAdd);
+                    personagensToAdd.clear();
+                }
+            }
+            if (!personagensToRemove.isEmpty()) {
+                synchronized (personagensToRemove) { // Synchronize access to the pending list
+                    faseAtual.removeAll(personagensToRemove);
+                    personagensToRemove.clear();
+                }
+            }
+        }
+
 
         g.dispose();
         g2.dispose();
@@ -438,10 +417,12 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     }
     
     private void drawLivesCounter(Graphics g) {
-        Hero hero = (Hero) faseAtual.get(0);
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Lives: " + hero.getLives(), 20, 30);
+        Hero hero = findHero();
+        if (hero != null) {
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 20));
+            g.drawString("Lives: " + hero.getLives(), 20, 30);
+        }
     }
     
     private void drawGameCompleteScreen(Graphics g) {
@@ -528,20 +509,15 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     }
     
     private void restartGame() {
-        // Reset all game states
+        // Reset game state
         gameCompleted = false;
-        cj = new ControleDeJogo();
-
-        // Reload all levels
-        levels.clear();
-        loadAllLevels();
+        cj = new ControleDeJogo(); // Reset game controller if needed
 
         // Reset to first level
-        loadLevel(0);
 
-        // Reset hero
-        hero = (Hero) faseAtual.get(0);
-        atualizaCamera();
+
+        // Reload the level
+        loadCurrentLevel();
 
         // Force repaint
         repaint();

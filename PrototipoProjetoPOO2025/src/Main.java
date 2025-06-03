@@ -1,5 +1,5 @@
 import Controler.Tela;
-import Modelo.Caveira;
+import Modelo.CaveiraR;
 import Modelo.CharacterExporter;
 import Modelo.Door;
 import Modelo.Hero;
@@ -11,6 +11,10 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+//        List<Personagem> charsToExport = new ArrayList<>();
+//        charsToExport.add(new CaveiraR("caveira.png"));
+//        CharacterExporter.exportCharacters(charsToExport, "caveiraR.zip");
+   
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
