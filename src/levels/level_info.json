@@ -1,0 +1,14 @@
+{
+    "level_1": {
+        "map": "Mapa1.json",
+        "name": "level 1"
+    },
+    "level_2": {
+        "map": "level2_map.json",
+        "name": "level 2"
+    },
+    "level_3": {
+        "map": "level3_map.json",
+        "name": "level 3"
+    }
+}
