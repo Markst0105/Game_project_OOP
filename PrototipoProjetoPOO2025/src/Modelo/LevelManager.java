@@ -284,6 +284,8 @@ public class LevelManager {
                 faseAtual.add(new Bomb("Bomba.png", 37, 23));
                 faseAtual.add(new Bomb("Bomba.png", 38, 21));
                 faseAtual.add(new Bomb("Bomba.png", 38, 26));
+                faseAtual.add(new Bomb("Bomba.png", 33, 28));
+                faseAtual.add(new Bomb("Bomba.png", 36, 28));
 
 
                 faseAtual.add(new CannonR("CanhaoD.png", 22, 1, 2));

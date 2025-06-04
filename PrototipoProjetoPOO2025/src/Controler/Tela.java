@@ -78,6 +78,7 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     private final List<Personagem> personagensToRemove = new ArrayList<>();
     private long gameSessionStartTime;
     private long finalElapsedTimeMillis; // Stores the final time in milliseconds
+    private Timer gameTimer;
     
 
     public Tela() {
@@ -202,13 +203,23 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     }
     
     public void nextLevel() {
-        if (currentLevel < LevelManager.getTotalLevels()) {
-            currentLevel++; // Increment to next level
-            loadCurrentLevel();
-        } else {        
-            // Calculate and store the final elapsed time
-            this.finalElapsedTimeMillis = System.currentTimeMillis() - this.gameSessionStartTime;
-            showGameCompleteMessage();
+        if (this.gameCompleted && currentLevel >= LevelManager.getTotalLevels()) { //
+            return; // Already processed game completion
+        }
+
+        if (currentLevel < LevelManager.getTotalLevels()) { //
+            currentLevel++; //
+            loadCurrentLevel(); //
+        } else {
+            // All levels are completed
+            if (!this.gameCompleted) { // Ensure this block runs only once
+                this.gameCompleted = true; 
+                this.finalElapsedTimeMillis = System.currentTimeMillis() - this.gameSessionStartTime; //
+
+                stopGameLoop(); 
+
+                showGameCompleteMessage(); 
+            }
         }
     }
     
@@ -481,14 +492,25 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     }
 
     public void go() {
+        if (gameTimer != null) {
+            gameTimer.cancel(); // Cancel any existing timer
+        }
+        gameTimer = new Timer(); // Create a new timer instance
         TimerTask task = new TimerTask() {
             public void run() {
-                repaint();
+                repaint(); // Let paint() decide what to draw based on game state
             }
         };
-        Timer timer = new Timer();
-        timer.schedule(task, 0, Consts.PERIOD);
+        gameTimer.schedule(task, 0, Consts.PERIOD); //
     }
+    
+    public void stopGameLoop() {
+        if (gameTimer != null) {
+            gameTimer.cancel();
+            gameTimer = null; // Allow it to be garbage collected
+        }
+    }
+
 
     public void keyPressed(KeyEvent e) {
            
@@ -559,6 +581,7 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
 
 
         this.requestFocusInWindow();
+        go();
     }
 
     

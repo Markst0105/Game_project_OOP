@@ -4,19 +4,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/Personagem.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Controler/Tela.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Auxiliar/Posicao.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/LevelManager.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/SaveState.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Controler/ControleDeJogo.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/FogoR.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/VisualTile.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Main.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Controler/Tela.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/GameLevel.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/Personagem.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/temp_import/character_0.char</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/LevelManager.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/Bomb.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Auxiliar/Consts.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/FogoL.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/CannonL.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/CannonR.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/levels/maps/Mapa4.json</file>
         </group>
     </open-files>
 </project-private>
