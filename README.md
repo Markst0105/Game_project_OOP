@@ -8,4 +8,4 @@ To play run at Game_project_OOP\PrototipoProjetoPOO2025\dist
 ```
 java -jar PrototipoProjetoPOO.jar
 ```
-
+Characters to be added through zip files have to be created in main
