@@ -9,7 +9,8 @@ import Modelo.FinishPoint;
 import Modelo.FogoR;
 import Modelo.Personagem;
 import Modelo.Hero;
-import auxiliar.Posicao;
+import Auxiliar.Posicao;
+import Modelo.FogoL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,11 +151,15 @@ public class ControleDeJogo {
                 if (!hero.isInvincible()) {
                     hero.loseLife();
                     heroTookDamage = true;
+                    if(hero.getLives()==0){
+                    this.gameOver = true;
+                }
                 }
             }
         } else if (other.isbMortal() || 
                    other instanceof CannonR || 
                    other instanceof FogoR || 
+                   other instanceof FogoL || 
                    other instanceof Chaser) {
             
             // Hero loses life only if not invincible

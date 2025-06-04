@@ -6,18 +6,17 @@
         <group>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/Personagem.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Controler/Tela.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Auxiliar/Posicao.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/LevelManager.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/Chaser.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/SaveState.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Controler/ControleDeJogo.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/FogoR.java</file>
             <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/VisualTile.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/TiledMapReader.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/levels/maps/Mapa2.json</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/CaveiraL.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/CaveiraR.java</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/levels/maps/Mapa3.json</file>
-            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/levels/maps/Mapa4.json</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Main.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Auxiliar/Consts.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/FogoL.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/CannonL.java</file>
+            <file>file:/C:/Users/marks/Downloads/PrototipoProjetoPOO2025/src/Modelo/CannonR.java</file>
         </group>
     </open-files>
 </project-private>

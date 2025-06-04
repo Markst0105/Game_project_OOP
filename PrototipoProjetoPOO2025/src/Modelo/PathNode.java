@@ -8,7 +8,7 @@ package Modelo;
  *
  * @author marks
  */
-import auxiliar.Posicao; // Assuming Posicao is in auxiliar
+import Auxiliar.Posicao; 
 import java.util.Objects;
 
 class PathNode implements Comparable<PathNode> {

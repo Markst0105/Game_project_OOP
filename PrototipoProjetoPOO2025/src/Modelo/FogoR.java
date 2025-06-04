@@ -2,7 +2,7 @@ package Modelo;
 
 import Auxiliar.Desenho;
 import Controler.Tela;
-import auxiliar.Posicao;
+import Auxiliar.Posicao;
 import java.awt.Graphics;
 import java.io.Serializable;
 

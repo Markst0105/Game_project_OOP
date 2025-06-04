@@ -4,7 +4,7 @@
  */
 package Modelo;
 
-import auxiliar.Posicao;
+import Auxiliar.Posicao;
 import java.io.Serializable;
 import java.util.ArrayList;
 

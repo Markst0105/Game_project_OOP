@@ -9,7 +9,7 @@ package Modelo;
  * @author marks
  */
 import Modelo.*;
-import auxiliar.Posicao;
+import Auxiliar.Posicao;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;

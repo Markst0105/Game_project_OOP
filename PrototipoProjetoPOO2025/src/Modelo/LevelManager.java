@@ -16,7 +16,7 @@ import java.util.*;
 import org.json.JSONArray;
 
 public class LevelManager {
-    private static final String LEVELS_DIR = "src/levels/";
+    private static final String LEVELS_DIR = "levels/";
     private static final String MAPS_DIR = LEVELS_DIR + "maps/";
     private static final String LEVEL_INFO_FILE = LEVELS_DIR + "level_info.json";
     private static int totalLevels = 5;
@@ -86,13 +86,13 @@ public class LevelManager {
                     // Determine which tileset the tile belongs to
                     // In your JSON, firstgid 1 is Tela-Fase1, firstgid 2 is Muro2
                     if (tileId == 1) { // Tela-Fase1 tile
-                        faseAtual.add(new Floor("stone.png", y, x));
+                        faseAtual.add(new Floor("Tela-Fase1.png", y, x));
                     } else if (tileId == 2) { // Muro2 tile
-                        faseAtual.add(new Wall("quartz1.png", y, x));
+                        faseAtual.add(new Wall("Muro2.png", y, x));
                     } else if(tileId == 3){
-                        faseAtual.add(new Floor("grass.png", y, x));
+                        faseAtual.add(new Floor("Gramado.png", y, x));
                     } else if(tileId == 4){
-                        faseAtual.add(new Wall("oakPlank.png", y, x));
+                        faseAtual.add(new Wall("Muro.png", y, x));
                     }
                 }
             }
@@ -106,7 +106,7 @@ public class LevelManager {
                 Hero hero = new Hero("Robbo.png");
                 hero.setPosicao(1, 1);
 
-                FinishPoint finish = new FinishPoint("finishFlag.png");
+                FinishPoint finish = new FinishPoint("Finish.png");
                 finish.setPosicao(38, 18);
                 
                 faseAtual.add(new Chaser("Chaser.png", 10, 10));
@@ -119,19 +119,19 @@ public class LevelManager {
                 Hero hero2 = new Hero("Robbo.png");
                 hero2.setPosicao(1, 1);
 
-                FinishPoint finish2 = new FinishPoint("finishFlag.png");
+                FinishPoint finish2 = new FinishPoint("Finish.png");
                 finish2.setPosicao(38, 1);
-                CannonR Caveira1 = new CannonR("cannonR.png");
+                CannonR Caveira1 = new CannonR("CanhaoD.png");
                 Caveira1.setPosicao(11, 1);
-                CannonR Caveira2 = new CannonR("cannonR.png");
+                CannonR Caveira2 = new CannonR("CanhaoD.png");
                 Caveira2.setPosicao(10, 1);
-                CannonL Caveira3 = new CannonL("cannonL.png");
+                CannonL Caveira3 = new CannonL("CanhaoE.png");
                 Caveira3.setPosicao(18, 18);
-                CannonL Caveira4 = new CannonL("cannonL.png");
+                CannonL Caveira4 = new CannonL("CanhaoE.png");
                 Caveira4.setPosicao(19, 18);
-                CannonL Caveira5 = new CannonL("cannonL.png", 50, 30, 18);          
-                CannonL Caveira6 = new CannonL("cannonL.png", 40, 37, 18);              
-                CannonR Caveira7 = new CannonR("cannonR.png", 50, 38, 2);
+                CannonL Caveira5 = new CannonL("CanhaoE.png", 50, 30, 18);          
+                CannonL Caveira6 = new CannonL("CanhaoE.png", 40, 37, 18);              
+                CannonR Caveira7 = new CannonR("CanhaoD.png", 50, 38, 2);
 
                 faseAtual.add(hero2);
                 faseAtual.add(finish2);
@@ -149,32 +149,32 @@ public class LevelManager {
                 Hero hero3 = new Hero("Robbo.png");
                 hero3.setPosicao(1, 1);
 
-                FinishPoint finish3 = new FinishPoint("finishFlag.png");
+                FinishPoint finish3 = new FinishPoint("Finish.png");
                 finish3.setPosicao(18, 46);  
 
                 // Portas
-                Door door1 = new Door("trapdoor.png", 1, 1, 9);  
-                Door door2 = new Door("trapdoor.png", 2, 7, 5);  
-                Door door3 = new Door("trapdoor.png", 3, 13, 11); 
-                Door door4 = new Door("trapdoor.png", 4, 14, 11); 
-                Door door5 = new Door("trapdoor.png", 5, 1, 28);  
-                Door door6 = new Door("trapdoor.png", 6, 2, 28);  
+                Door door1 = new Door("Grade.png", 1, 1, 9);  
+                Door door2 = new Door("Grade.png", 2, 7, 5);  
+                Door door3 = new Door("Grade.png", 3, 13, 11); 
+                Door door4 = new Door("Grade.png", 4, 14, 11); 
+                Door door5 = new Door("Grade.png", 5, 1, 28);  
+                Door door6 = new Door("Grade.png", 6, 2, 28);  
 
                 // Botões
-                Button Button1 = new Button("button.png");
+                Button Button1 = new Button("Botao.png");
                 Button1.setPosicao(5, 1);  
                 Button1.addLinkedDoor(door1);
 
-                Button Button2 = new Button("button.png");
+                Button Button2 = new Button("Botao.png");
                 Button2.setPosicao(3, 12);  
                 Button2.addLinkedDoor(door2);
 
-                Button Button3 = new Button("button.png");
+                Button Button3 = new Button("Botao.png");
                 Button3.setPosicao(15, 3);  
                 Button3.addLinkedDoor(door3);
                 Button3.addLinkedDoor(door4);
 
-                Button Button4 = new Button("button.png");
+                Button Button4 = new Button("Botao.png");
                 Button4.setPosicao(18, 31);  
                 Button4.addLinkedDoor(door5);
                 Button4.addLinkedDoor(door6);
@@ -201,35 +201,35 @@ public class LevelManager {
                 hero4.setPosicao(1, 1); // Exemplo de posição
     
                 
-                FinishPoint finish4 = new FinishPoint("finishFlag.png");
+                FinishPoint finish4 = new FinishPoint("Finish.png");
                 finish4.setPosicao(39, 18);
 
                 // Criar 10 Bombs
-                Bomb Bomb1 = new Bomb("tnt.png");
+                Bomb Bomb1 = new Bomb("Bomba.png");
                 Bomb1.setPosicao(10, 7);
 
-                Bomb Bomb2 = new Bomb("tnt.png");
+                Bomb Bomb2 = new Bomb("Bomba.png");
                 Bomb2.setPosicao(0, 18);
 
-                Bomb Bomb3 = new Bomb("tnt.png");
+                Bomb Bomb3 = new Bomb("Bomba.png");
                 Bomb3.setPosicao(4, 2);
 
-                Bomb Bomb4 = new Bomb("tnt.png");
+                Bomb Bomb4 = new Bomb("Bomba.png");
                 Bomb4.setPosicao(20, 1);
 
-                Bomb Bomb5 = new Bomb("tnt.png");
+                Bomb Bomb5 = new Bomb("Bomba.png");
                 Bomb5.setPosicao(16, 18);
 
-                Bomb Bomb6 = new Bomb("tnt.png");
+                Bomb Bomb6 = new Bomb("Bomba.png");
                 Bomb6.setPosicao(27, 15);
 
-                Bomb Bomb7 = new Bomb("tnt.png");
+                Bomb Bomb7 = new Bomb("Bomba.png");
                 Bomb7.setPosicao(29, 10);
 
-                Bomb Bomb9 = new Bomb("tnt.png");
+                Bomb Bomb9 = new Bomb("Bomba.png");
                 Bomb9.setPosicao(35, 10);
 
-                Bomb Bomb10 = new Bomb("tnt.png");
+                Bomb Bomb10 = new Bomb("Bomba.png");
                 Bomb10.setPosicao(39, 0);
                 
                 Chaser chaser2 = new Chaser("Chaser.png", 3, 2);
@@ -252,78 +252,78 @@ public class LevelManager {
             case 5:
                 faseAtual.add(new Hero("Robbo.png", 1, 1));
                 
-                faseAtual.add(new FinishPoint("finishFlag.png", 38, 28));
+                faseAtual.add(new FinishPoint("Finish.png", 38, 28));
 
-                faseAtual.add(new Bomb("tnt.png", 2, 8));
-                faseAtual.add(new Bomb("tnt.png", 7, 11));
-                faseAtual.add(new Bomb("tnt.png", 8, 11));
-                faseAtual.add(new Bomb("tnt.png", 9, 11));
-                faseAtual.add(new Bomb("tnt.png", 7, 12));
-                faseAtual.add(new Bomb("tnt.png", 8, 12));
-                faseAtual.add(new Bomb("tnt.png", 9, 12));
-                faseAtual.add(new Bomb("tnt.png", 9, 37));
-                faseAtual.add(new Bomb("tnt.png", 28, 38));
-                faseAtual.add(new Bomb("tnt.png", 27, 38));
-                faseAtual.add(new Bomb("tnt.png", 28, 36));
-                faseAtual.add(new Bomb("tnt.png", 27, 34));
-                faseAtual.add(new Bomb("tnt.png", 28, 30));
-                faseAtual.add(new Bomb("tnt.png", 27, 26));
-                faseAtual.add(new Bomb("tnt.png", 29, 25));
-                faseAtual.add(new Bomb("tnt.png", 28, 23));
-                faseAtual.add(new Bomb("tnt.png", 30, 22));
-                faseAtual.add(new Bomb("tnt.png", 31, 23));
-                faseAtual.add(new Bomb("tnt.png", 31, 26));
-                faseAtual.add(new Bomb("tnt.png", 32, 24));
-                faseAtual.add(new Bomb("tnt.png", 32, 27));
-                faseAtual.add(new Bomb("tnt.png", 33, 21));
-                faseAtual.add(new Bomb("tnt.png", 34, 24));
-                faseAtual.add(new Bomb("tnt.png", 35, 21));
-                faseAtual.add(new Bomb("tnt.png", 35, 26));
-                faseAtual.add(new Bomb("tnt.png", 36, 25));
-                faseAtual.add(new Bomb("tnt.png", 36, 27));
-                faseAtual.add(new Bomb("tnt.png", 37, 23));
-                faseAtual.add(new Bomb("tnt.png", 38, 21));
-                faseAtual.add(new Bomb("tnt.png", 38, 26));
+                faseAtual.add(new Bomb("Bomba.png", 2, 8));
+                faseAtual.add(new Bomb("Bomba.png", 7, 11));
+                faseAtual.add(new Bomb("Bomba.png", 8, 11));
+                faseAtual.add(new Bomb("Bomba.png", 9, 11));
+                faseAtual.add(new Bomb("Bomba.png", 7, 12));
+                faseAtual.add(new Bomb("Bomba.png", 8, 12));
+                faseAtual.add(new Bomb("Bomba.png", 9, 12));
+                faseAtual.add(new Bomb("Bomba.png", 9, 37));
+                faseAtual.add(new Bomb("Bomba.png", 28, 38));
+                faseAtual.add(new Bomb("Bomba.png", 27, 38));
+                faseAtual.add(new Bomb("Bomba.png", 28, 36));
+                faseAtual.add(new Bomb("Bomba.png", 27, 34));
+                faseAtual.add(new Bomb("Bomba.png", 28, 30));
+                faseAtual.add(new Bomb("Bomba.png", 27, 26));
+                faseAtual.add(new Bomb("Bomba.png", 29, 25));
+                faseAtual.add(new Bomb("Bomba.png", 28, 23));
+                faseAtual.add(new Bomb("Bomba.png", 30, 22));
+                faseAtual.add(new Bomb("Bomba.png", 31, 23));
+                faseAtual.add(new Bomb("Bomba.png", 31, 26));
+                faseAtual.add(new Bomb("Bomba.png", 32, 24));
+                faseAtual.add(new Bomb("Bomba.png", 32, 27));
+                faseAtual.add(new Bomb("Bomba.png", 33, 21));
+                faseAtual.add(new Bomb("Bomba.png", 34, 24));
+                faseAtual.add(new Bomb("Bomba.png", 35, 21));
+                faseAtual.add(new Bomb("Bomba.png", 35, 26));
+                faseAtual.add(new Bomb("Bomba.png", 36, 25));
+                faseAtual.add(new Bomb("Bomba.png", 36, 27));
+                faseAtual.add(new Bomb("Bomba.png", 37, 23));
+                faseAtual.add(new Bomb("Bomba.png", 38, 21));
+                faseAtual.add(new Bomb("Bomba.png", 38, 26));
 
 
-                faseAtual.add(new CannonR("cannonR.png", 22, 1, 2));
-                faseAtual.add(new CannonL("cannonL.png", 22, 7, 8));
-                faseAtual.add(new CannonL("cannonL.png", 45, 1, 18));
-                faseAtual.add(new CannonL("cannonL.png", 45, 18, 28));
-                faseAtual.add(new CannonR("cannonR.png", 20, 17, 20));
-                faseAtual.add(new CannonR("cannonR.png", 20, 12, 20));
-                faseAtual.add(new CannonL("cannonL.png", 20, 10, 28));
-                faseAtual.add(new CannonR("cannonR.png", 20, 8, 20));
-                faseAtual.add(new CannonL("cannonL.png", 20, 5, 28));
-                faseAtual.add(new CannonR("cannonR.png", 20, 3, 20));
-                faseAtual.add(new CannonR("cannonR.png", 20, 2, 20));
-                faseAtual.add(new CannonR("cannonR.png", 22, 15, 30));
-                faseAtual.add(new CannonL("cannonL.png", 22, 19, 38));
-                faseAtual.add(new CannonR("cannonR.png", 22, 21, 21));
-                faseAtual.add(new CannonR("cannonR.png", 22, 26, 21));
-                faseAtual.add(new CannonL("cannonL.png", 20, 29, 28));
+                faseAtual.add(new CannonR("CanhaoD.png", 22, 1, 2));
+                faseAtual.add(new CannonL("CanhaoE.png", 22, 7, 8));
+                faseAtual.add(new CannonL("CanhaoE.png", 45, 1, 18));
+                faseAtual.add(new CannonL("CanhaoE.png", 45, 18, 28));
+                faseAtual.add(new CannonR("CanhaoD.png", 20, 17, 20));
+                faseAtual.add(new CannonR("CanhaoD.png", 20, 12, 20));
+                faseAtual.add(new CannonL("CanhaoE.png", 20, 10, 28));
+                faseAtual.add(new CannonR("CanhaoD.png", 20, 8, 20));
+                faseAtual.add(new CannonL("CanhaoE.png", 20, 5, 28));
+                faseAtual.add(new CannonR("CanhaoD.png", 20, 3, 20));
+                faseAtual.add(new CannonR("CanhaoD.png", 20, 2, 20));
+                faseAtual.add(new CannonR("CanhaoD.png", 22, 15, 30));
+                faseAtual.add(new CannonL("CanhaoE.png", 22, 19, 38));
+                faseAtual.add(new CannonR("CanhaoD.png", 22, 21, 21));
+                faseAtual.add(new CannonR("CanhaoD.png", 22, 26, 21));
+                faseAtual.add(new CannonL("CanhaoE.png", 20, 29, 28));
 
-                Door door7 = new Door("trapdoor.png", 7, 8, 9);
-                Door door8 = new Door("trapdoor.png", 8, 9, 13);
-                Door door9 = new Door("trapdoor.png", 9, 1, 29);
-                Door door10 = new Door("trapdoor.png", 10, 2, 29);
-                Door door11 = new Door("trapdoor.png", 11, 14, 38);
+                Door door7 = new Door("Grade.png", 7, 8, 9);
+                Door door8 = new Door("Grade.png", 8, 9, 13);
+                Door door9 = new Door("Grade.png", 9, 1, 29);
+                Door door10 = new Door("Grade.png", 10, 2, 29);
+                Door door11 = new Door("Grade.png", 11, 14, 38);
 
                 // Buttons
-                Button Button5 = new Button("button.png");
+                Button Button5 = new Button("Botao.png");
                 Button5.setPosicao(1, 8);
                 Button5.addLinkedDoor(door7);
 
-                Button Button6 = new Button("button.png");
+                Button Button6 = new Button("Botao.png");
                 Button6.setPosicao(4, 14);
                 Button6.addLinkedDoor(door8);
 
-                Button Button7 = new Button("button.png");
+                Button Button7 = new Button("Botao.png");
                 Button7.setPosicao(1, 20);
                 Button7.addLinkedDoor(door9);
                 Button7.addLinkedDoor(door10);
 
-                Button Button8 = new Button("button.png");
+                Button Button8 = new Button("Botao.png");
                 Button8.setPosicao(11, 33);
                 Button8.addLinkedDoor(door11);
 

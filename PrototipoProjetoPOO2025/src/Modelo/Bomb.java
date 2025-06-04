@@ -19,7 +19,7 @@ import javax.swing.ImageIcon;
 public class Bomb extends Personagem implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final String EXPLOSION_IMAGE_NAME = "explosion.png"; // Image for the explosion
+    private static final String EXPLOSION_IMAGE_NAME = "Explosao.png"; // Image for the explosion
     private static final long EXPLOSION_DURATION_MS = 1000; // How long the explosion image stays (0.5 seconds)
 
     private boolean exploded;

@@ -19,7 +19,7 @@ import Modelo.SaveState;
 import Modelo.TiledMapReader;
 import Modelo.VisualTile;
 import Modelo.Wall;
-import auxiliar.Posicao;
+import Auxiliar.Posicao;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.FlowLayout;

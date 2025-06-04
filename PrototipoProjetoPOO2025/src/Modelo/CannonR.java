@@ -36,7 +36,7 @@ public class CannonR extends Personagem implements Serializable{
         this.iContaIntervalos++;
         if(this.iContaIntervalos == fireRate){
             this.iContaIntervalos = 0;
-            FogoR f = new FogoR("fireCharge.png");
+            FogoR f = new FogoR("FireR.png");
             f.setPosicao(pPosicao.getLinha(),pPosicao.getColuna()+1);
             Desenho.acessoATelaDoJogo().addPersonagem(f);
         }

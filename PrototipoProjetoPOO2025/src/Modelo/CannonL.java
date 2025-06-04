@@ -49,7 +49,7 @@ public class CannonL extends Personagem implements Serializable {
             // Create the left-moving FogoL projectile
             // The FogoL constructor will attempt to set its position.
             // If Posicao.setPosicao has been fixed (see step 3), this should work.
-            FogoL f = new FogoL("fireCharge.png", fogoLinha, fogoColuna); 
+            FogoL f = new FogoL("FireL.png", fogoLinha, fogoColuna); 
             
             Desenho.acessoATelaDoJogo().addPersonagem(f);
         }

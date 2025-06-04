@@ -3,7 +3,7 @@ package Modelo;
 import Auxiliar.Consts;
 import Auxiliar.Desenho;
 import Controler.Tela;
-import auxiliar.Posicao;
+import Auxiliar.Posicao;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;

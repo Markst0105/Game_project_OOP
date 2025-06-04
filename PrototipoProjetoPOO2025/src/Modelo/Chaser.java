@@ -6,7 +6,7 @@ package Modelo;
 
 import Auxiliar.Consts;
 import Auxiliar.Desenho;
-import auxiliar.Posicao;
+import Auxiliar.Posicao;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;

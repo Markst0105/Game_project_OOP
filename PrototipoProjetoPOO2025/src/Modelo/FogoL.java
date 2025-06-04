@@ -5,7 +5,7 @@
 package Modelo;
 
 import Auxiliar.Desenho;
-import auxiliar.Posicao;
+import Auxiliar.Posicao;
 import java.io.Serializable;
 
 /**
