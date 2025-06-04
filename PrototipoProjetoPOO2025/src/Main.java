@@ -1,8 +1,7 @@
 import Controler.Tela;
-import Modelo.CannonR;
+import Modelo.*;
 import Modelo.CharacterExporter;
-import Modelo.Door;
-import Modelo.Hero;
+
 import Modelo.Personagem;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,8 +11,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 //        List<Personagem> charsToExport = new ArrayList<>();
-//        charsToExport.add(new CaveiraR("caveira.png"));
-//        CharacterExporter.exportCharacters(charsToExport, "caveiraR.zip");
+//        charsToExport.add(new Bomb("tnt.png"));
+//        CharacterExporter.exportCharacters(charsToExport, "bomb.zip");
    
         
         java.awt.EventQueue.invokeLater(new Runnable() {

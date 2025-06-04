@@ -76,6 +76,8 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     private boolean gameCompleted = false;
     private final List<Personagem> personagensToAdd = new ArrayList<>();
     private final List<Personagem> personagensToRemove = new ArrayList<>();
+    private long gameSessionStartTime;
+    private long finalElapsedTimeMillis; // Stores the final time in milliseconds
     
 
     public Tela() {
@@ -88,6 +90,9 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
 
         faseAtual = new ArrayList<>();
         currentLevel = 1;
+        this.gameSessionStartTime = System.currentTimeMillis();
+        this.finalElapsedTimeMillis = 0; // Initialize to 0
+        
         loadCurrentLevel();
         atualizaCamera();
         new DropTarget(this, new DragDropHandler(this));
@@ -96,6 +101,7 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     
     private void loadCurrentLevel() {
         try {
+            gameCompleted = false;
             TiledMapReader.clearVisualTiles(); // Clear previous visual tiles
             faseAtual.clear();
             LevelManager.loadLevel(currentLevel, faseAtual);
@@ -147,19 +153,6 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
                 .findFirst()
                 .orElse(null);
     }
-    
-    private void loadLevel(int levelIndex) {
-        if (levelIndex >= 0 && levelIndex < levels.size()) {
-            faseAtual.clear();
-            faseAtual.addAll(levels.get(levelIndex).getElements());
-            currentLevel = levelIndex;
-            hero = findHero();
-            if (hero == null) {
-                throw new RuntimeException("Hero not found in level");
-            }
-            atualizaCamera();
-        }
-    }
 
     
     private void saveGame() {
@@ -188,6 +181,7 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
 
             // Load the saved level
             this.currentLevel = state.getCurrentLevel();
+            
             loadCurrentLevel();
 
             // Restore hero state
@@ -211,7 +205,9 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
         if (currentLevel < LevelManager.getTotalLevels()) {
             currentLevel++; // Increment to next level
             loadCurrentLevel();
-        } else {
+        } else {        
+            // Calculate and store the final elapsed time
+            this.finalElapsedTimeMillis = System.currentTimeMillis() - this.gameSessionStartTime;
             showGameCompleteMessage();
         }
     }
@@ -227,27 +223,38 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
         repaint();
     }
     
-    private void showLevelCompleteMessage() {
-        // You can implement a proper message display
-        System.out.println("Level completed! Loading next level...");
-        
-    }
-    
     private void showGameCompleteMessage() {
-        SwingUtilities.invokeLater(() -> {
-            int option = JOptionPane.showOptionDialog(this,
-                "You've completed all levels!\nWould you like to play again?",
-                "Game Complete",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                new Object[]{"Play Again", "Exit"},
-                "Play Again");
+        // Format the finalElapsedTimeMillis into seconds and milliseconds
+        long totalMillis = this.finalElapsedTimeMillis;
+        long totalSecondsValue = totalMillis / 1000;      // Total seconds as a whole number
+        long millisecondsPart = totalMillis % 1000;   // The milliseconds part
 
-            if (option == JOptionPane.YES_OPTION) {
-                restartGame();
+        String timeString = String.format("%d.%03d seconds", totalSecondsValue, millisecondsPart);
+
+        SwingUtilities.invokeLater(() -> { //
+            String message = String.format(
+                "You've completed all levels!\nFinal Time: %s\nWould you like to play again?",
+                timeString // Include the formatted time string
+            );
+            int option = JOptionPane.showOptionDialog(this, //
+                message, // Updated message with time
+                "Game Complete", //
+                JOptionPane.YES_NO_OPTION, //
+                JOptionPane.INFORMATION_MESSAGE, //
+                null, //
+                new Object[]{"Play Again", "Exit"}, //
+                "Play Again"); //
+
+            if (option == JOptionPane.YES_OPTION) { //
+                restartGame(); //
             } else {
-                System.exit(0);
+                System.exit(0); //
+            }
+
+            // After the dialog is handled (and if not exiting), request focus back to the main window.
+            // This is important for the KeyListener to work.
+            if (option == JOptionPane.YES_OPTION) { // Only if the game window is still supposed to be active
+                this.requestFocusInWindow(); 
             }
         });
     }
@@ -291,131 +298,116 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     @Override
     public void paint(Graphics gOld) {
         Graphics g = this.getBufferStrategy().getDrawGraphics();
-        /*Criamos um contexto gráfico*/
-        g2 = g.create(getInsets().left, getInsets().top, getWidth() - getInsets().right, getHeight() - getInsets().top);
-        /**
-         * ***********Desenha cenário de fundo*************
-         */
-        
-        for (VisualTile tile : TiledMapReader.getVisualTiles()) {
-            tile.draw(g2, cameraColuna, cameraLinha, Consts.CELL_SIDE);
+        g2 = g.create(getInsets().left, getInsets().top, getWidth() - getInsets().right, getHeight() - getInsets().top); //
+
+        // 1. Draw Base Background (e.g., black screen or full map background)
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, getWidth(), getHeight());
+
+        // 2. Draw Visual Map Tiles (scenery)
+        for (VisualTile tile : TiledMapReader.getVisualTiles()) { //
+            tile.draw(g2, cameraColuna, cameraLinha, Consts.CELL_SIDE); //
         }
 
-        // 2. Then draw game objects
-        if (!this.faseAtual.isEmpty()) {
-            this.cj.desenhaTudo(faseAtual);
-            this.cj.processaTudo(faseAtual);
-        }
-        
-        for (int i = 0; i < Consts.RES; i++) {
-            for (int j = 0; j < Consts.RES; j++) {
-                int mapaLinha = cameraLinha + i;
-                int mapaColuna = cameraColuna + j;
+        // 3. Handle Game State Specific Drawing & Logic
+        if (cj.isGameOver()) { //
+            // Draw GAME OVER screen elements (as you have them)
+            // ... (your game over drawing code) ...
+            g2.setColor(new Color(0, 0, 0, 180)); //
+            g2.fillRect(0, 0, getWidth(), getHeight()); //
+            g2.setColor(Color.RED); //
+            g2.setFont(new Font("Arial", Font.BOLD, 50)); //
+            String gameOverText = "GAME OVER"; //
+            int textWidth = g2.getFontMetrics().stringWidth(gameOverText); //
+            g2.drawString(gameOverText, (getWidth() - textWidth) / 2, getHeight() / 2); //
+            g2.setColor(Color.WHITE); //
+            g2.setFont(new Font("Arial", Font.PLAIN, 20)); //
+            String restartText = "Press R to restart"; //
+            textWidth = g2.getFontMetrics().stringWidth(restartText); //
+            g2.drawString(restartText, (getWidth() - textWidth) / 2, getHeight() / 2 + 50); //
 
-                if (mapaLinha < Consts.MUNDO_ALTURA && mapaColuna < Consts.MUNDO_LARGURA) {
-                    try {
-                        Image newImage = Toolkit.getDefaultToolkit().getImage(
-                                new java.io.File(".").getCanonicalPath() + Consts.PATH + "blackTile.png");
-                        g2.drawImage(newImage,
-                                j * Consts.CELL_SIDE, i * Consts.CELL_SIDE,
-                                Consts.CELL_SIDE, Consts.CELL_SIDE, null);
-                    } catch (IOException ex) {
-                        Logger.getLogger(Tela.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-        
-        if (gameCompleted) {
-            drawGameCompleteScreen(g2);
+        } else if (this.gameCompleted) { //
+            drawGameCompleteScreen(g2); // Draws the "CONGRATULATIONS!" screen
+
         } else {
-            // Draw normal game
-            if (!this.faseAtual.isEmpty()) {
-                this.cj.desenhaTudo(faseAtual);
-                this.cj.processaTudo(faseAtual);
+            // Normal Game Play State:
+
+            // a. Process game logic (should happen once per frame)
+            if (!this.faseAtual.isEmpty()) { //
+                this.cj.processaTudo(faseAtual); //
             }
-            drawLivesCounter(g2);
+
+            // b. Draw all game elements (characters, items, etc.)
+            if (!this.faseAtual.isEmpty()) { //
+                this.cj.desenhaTudo(faseAtual); //
+            }
+
+            // c. Draw UI elements like lives counter AND the new timer
+            drawLivesCounter(g2);       // Your existing method
+            drawSessionTimer(g2);       // ***** CALL THE NEW TIMER DRAW METHOD HERE *****
         }
-        
-        for (int i = 0; i < Consts.RES; i++) {
-            for (int j = 0; j < Consts.RES; j++) {
-                int mapaLinha = cameraLinha + i;
-                int mapaColuna = cameraColuna + j;
 
-                if (mapaLinha < Consts.MUNDO_ALTURA && mapaColuna < Consts.MUNDO_LARGURA) {
-                    try {
-                        String imageName;
-                        // Check if this is a border position
-                        if (mapaLinha == 0 || mapaLinha == Consts.MUNDO_ALTURA - 1 ||
-                            mapaColuna == 0 || mapaColuna == Consts.MUNDO_LARGURA - 1) {
-                            imageName = "blackTile.png";
-                        } else {
-                            imageName = "blackTile.png";
-                        }
-
-                        Image newImage = Toolkit.getDefaultToolkit().getImage(
-                            new java.io.File(".").getCanonicalPath() + Consts.PATH + imageName);
-                        g2.drawImage(newImage,
-                            j * Consts.CELL_SIDE, i * Consts.CELL_SIDE,
-                            Consts.CELL_SIDE, Consts.CELL_SIDE, null);
-                    } catch (IOException ex) {
-                        Logger.getLogger(Tela.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+        // 4. Apply Batched Character Additions/Removals
+        // (This part is from the first version of Tela.java you provided, ensure it's correctly placed)
+        synchronized (faseAtual) { //
+            if (!personagensToAdd.isEmpty()) { //
+                synchronized (personagensToAdd) { //
+                    faseAtual.addAll(personagensToAdd); //
+                    personagensToAdd.clear(); //
                 }
             }
-        }
-        
-        
-        
-        /* Check game over state */
-        if (cj.isGameOver()) {
-            // Draw game over screen
-            g2.setColor(new Color(0, 0, 0, 180)); // Semi-transparent black
-            g2.fillRect(0, 0, getWidth(), getHeight());
-            g2.setColor(Color.RED);
-            g2.setFont(new Font("Arial", Font.BOLD, 50));
-            String gameOverText = "GAME OVER";
-            int textWidth = g2.getFontMetrics().stringWidth(gameOverText);
-            g2.drawString(gameOverText, (getWidth() - textWidth) / 2, getHeight() / 2);
-            g2.setColor(Color.WHITE);
-            g2.setFont(new Font("Arial", Font.PLAIN, 20));
-            String restartText = "Press R to restart";
-            textWidth = g2.getFontMetrics().stringWidth(restartText);
-            g2.drawString(restartText, (getWidth() - textWidth) / 2, getHeight() / 2 + 50);
-        } else if (gameCompleted) {
-            drawGameCompleteScreen(g2);
-        }
-        else {
-            // Draw normal game elements
-            if (!this.faseAtual.isEmpty()) {
-                this.cj.desenhaTudo(faseAtual); // Iterates faseAtual
-                this.cj.processaTudo(faseAtual); // Iterates faseAtual or a copy
-            }
-            drawLivesCounter(g2);
-        }
-        
-        synchronized (faseAtual) { // Synchronize direct access to faseAtual
-            if (!personagensToAdd.isEmpty()) {
-                synchronized (personagensToAdd) { // Synchronize access to the pending list
-                    faseAtual.addAll(personagensToAdd);
-                    personagensToAdd.clear();
-                }
-            }
-            if (!personagensToRemove.isEmpty()) {
-                synchronized (personagensToRemove) { // Synchronize access to the pending list
-                    faseAtual.removeAll(personagensToRemove);
-                    personagensToRemove.clear();
+            if (!personagensToRemove.isEmpty()) { //
+                synchronized (personagensToRemove) { //
+                    faseAtual.removeAll(personagensToRemove); //
+                    personagensToRemove.clear(); //
                 }
             }
         }
 
-
-        g.dispose();
-        g2.dispose();
-        if (!getBufferStrategy().contentsLost()) {
-            getBufferStrategy().show();
-        }               
+        // 5. Finalize and show the buffer
+        g.dispose(); //
+        g2.dispose(); //
+        if (!getBufferStrategy().contentsLost()) { //
+            getBufferStrategy().show(); //
+        }                   
         
+    }
+    
+    private void drawSessionTimer(Graphics g) {
+        // gameSessionStartTime is initialized in Tela() constructor and restartGame()
+        if (this.gameSessionStartTime == 0) { 
+            // Avoid issues if timer hasn't been properly initialized (should not happen with current setup)
+            return;
+        }
+
+        long currentTimeMillis = System.currentTimeMillis();
+        long elapsedTimeMillis = currentTimeMillis - this.gameSessionStartTime;
+
+        long totalElapsedSeconds = elapsedTimeMillis / 1000;      // Total seconds
+        long millisecondsPart = elapsedTimeMillis % 1000;       // Milliseconds part for display
+
+        // Format the time string, e.g., "Time: 123.456 s"
+        String timeStr = String.format("Time: %d.%03d s", totalElapsedSeconds, millisecondsPart);
+
+        // Set font and color (can be same as lives counter or different)
+        g.setColor(Color.WHITE); //
+        g.setFont(new Font("Arial", Font.BOLD, 20)); //
+
+        // Determine X position for the timer, next to the lives counter
+        int timerX;
+        Hero currentHero = findHero(); // Method findHero() already exists
+        if (currentHero != null) {
+            String livesText = "Lives: " + currentHero.getLives(); //
+            java.awt.FontMetrics fm = g.getFontMetrics(); // Get metrics for the current font
+            int livesTextWidth = fm.stringWidth(livesText);
+            timerX = 20 + livesTextWidth + 30; // Start timer 30px to the right of the lives text (20 is lives' left margin)
+        } else {
+            timerX = 150; // Fallback X position if hero/lives text isn't available
+        }
+
+        int timerY = 30; // Same Y position as the lives counter
+
+        g.drawString(timeStr, timerX, timerY);
     }
     
     private void drawLivesCounter(Graphics g) {
@@ -429,26 +421,54 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     
     private void drawGameCompleteScreen(Graphics g) {
         // Dark background
-        g.setColor(new Color(0, 0, 0, 180));
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(new Color(0, 0, 0, 180)); 
+        g.fillRect(0, 0, getWidth(), getHeight()); 
 
         // Game complete text
-        g.setColor(Color.GREEN);
-        g.setFont(new Font("Arial", Font.BOLD, 50));
-        String text = "CONGRATULATIONS!";
-        int textWidth = g.getFontMetrics().stringWidth(text);
-        g.drawString(text, (getWidth() - textWidth)/2, getHeight()/2 - 30);
+        g.setColor(Color.GREEN); 
+        g.setFont(new Font("Arial", Font.BOLD, 50)); 
+        String text = "CONGRATULATIONS!"; 
+        int textWidth = g.getFontMetrics().stringWidth(text); 
+        g.drawString(text, (getWidth() - textWidth) / 2, getHeight() / 2 - 30); 
 
         // Instructions
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.PLAIN, 20));
-        text = "You've completed all levels!";
+        g.setColor(Color.WHITE); //
+        g.setFont(new Font("Arial", Font.PLAIN, 20)); 
+        text = "You've completed all levels!"; 
         textWidth = g.getFontMetrics().stringWidth(text);
-        g.drawString(text, (getWidth() - textWidth)/2, getHeight()/2 + 20);
+        g.drawString(text, (getWidth() - textWidth) / 2, getHeight() / 2 + 20); 
 
-        text = "Press R to play again or ESC to exit";
-        textWidth = g.getFontMetrics().stringWidth(text);
-        g.drawString(text, (getWidth() - textWidth)/2, getHeight()/2 + 50);
+        // UPDATED INSTRUCTION TEXT:
+        text = "Press SPACE to play again"; 
+        textWidth = g.getFontMetrics().stringWidth(text); //
+        g.drawString(text, (getWidth() - textWidth) / 2, getHeight() / 2 + 50); 
+        
+        // ***** ADDING NAMES START *****
+        // Set font and color for the names (you can adjust these)
+        g.setFont(new Font("Arial", Font.PLAIN, 14)); // Using a slightly smaller font for the names
+        g.setColor(Color.LIGHT_GRAY); // A different color to distinguish from other text
+
+        String name1 = "Mark Seiji Takakura - 15478710";
+        String name2 = "Marlon Camargo Mota - 11299828";
+        String name3 = "Miguel Filippo Calhabeu - 15480331";
+
+        int leftMargin = 10;    // Pixels from the left edge
+        int bottomMargin = 50;  // Pixels from the bottom edge
+
+        java.awt.FontMetrics fm = g.getFontMetrics();
+        int fontHeight = fm.getHeight();
+        int lineSpacing = 5; // Extra pixels between lines of text
+
+        // Calculate Y positions starting from the bottom
+        // The Y coordinate for drawString is the baseline of the text.
+        int yPosName3 = getHeight() - bottomMargin;
+        int yPosName2 = yPosName3 - (fontHeight + lineSpacing);
+        int yPosName1 = yPosName2 - (fontHeight + lineSpacing);
+
+        g.drawString(name3, leftMargin, yPosName3);    // Miguel
+        g.drawString(name2, leftMargin, yPosName2);    // Marlon Mota de Camargo
+        g.drawString(name1, leftMargin, yPosName1);    // Mark Seiji Takakura - 15478710
+        // ***** ADDING NAMES END *****
     }
     
 
@@ -471,13 +491,24 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     }
 
     public void keyPressed(KeyEvent e) {
+           
+        if (gameCompleted) { //
+            if (e.getKeyCode() == KeyEvent.VK_SPACE) { // Check for SPACE key
+                // Reload the level
+                loadCurrentLevel();
+
+                // Force repaint
+                repaint();
+            }
+            return;
+        }
         
         if(cj.isGameOver()){
             if (e.getKeyCode() == KeyEvent.VK_R){
                 restartLevel();
             }
             return;
-        }
+        }  
         
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
@@ -515,17 +546,19 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     
     private void restartGame() {
         // Reset game state
-        gameCompleted = false;
+        gameCompleted = true;
+        drawGameCompleteScreen(g2);
+        
         cj = new ControleDeJogo(); // Reset game controller if needed
 
         // Reset to first level
         this.currentLevel = 1;
+        
+        this.gameSessionStartTime = System.currentTimeMillis();
+        this.finalElapsedTimeMillis = 0; // Initialize to 0
 
-        // Reload the level
-        loadCurrentLevel();
 
-        // Force repaint
-        repaint();
+        this.requestFocusInWindow();
     }
 
     

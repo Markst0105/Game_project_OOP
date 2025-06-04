@@ -17,7 +17,7 @@ import java.util.PriorityQueue;
 
 public class Chaser extends Personagem implements Serializable {
     private int moveCounter = 0;
-    private static final int SPEED_DELAY_INTERVAL = 6; // Adjust as needed
+    private static final int SPEED_DELAY_INTERVAL = 8; // Adjust as needed
 
     private enum IntendedMove { UP, DOWN, LEFT, RIGHT, NONE }
     private IntendedMove nextMove = IntendedMove.NONE;
