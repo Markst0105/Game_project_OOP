@@ -5,6 +5,7 @@
 package Modelo;
 
 import Auxiliar.Desenho;
+import auxiliar.Posicao;
 import java.io.Serializable;
 
 /**
@@ -36,9 +37,18 @@ public class FogoL extends Personagem implements Serializable {
         if (moveCounter >= MOVE_INTERVAL) {
             moveCounter = 0; // Reset the counter
 
-            // FogoL moves left
-            if (!this.moveLeft()) { // Attempts to move one cell to the left
-                // If moveLeft() returns false, remove the FogoL
+            Posicao currentPos = this.getPosicao();
+            // Create a temporary Posicao object to determine the next potential cell
+            Posicao potentialNextPos = new Posicao(currentPos.getLinha(), currentPos.getColuna());
+            boolean isNextCellWithinWorldBounds = potentialNextPos.moveLeft();
+
+            if (isNextCellWithinWorldBounds) {
+                if (Desenho.acessoATelaDoJogo().ehPosicaoValida(potentialNextPos)) { //
+                    this.pPosicao.moveLeft(); 
+                } else {
+                    Desenho.acessoATelaDoJogo().removePersonagem(this);
+                }
+            } else {
                 Desenho.acessoATelaDoJogo().removePersonagem(this);
             }
         }

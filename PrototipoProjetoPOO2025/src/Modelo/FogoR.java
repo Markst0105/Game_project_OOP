@@ -2,6 +2,7 @@ package Modelo;
 
 import Auxiliar.Desenho;
 import Controler.Tela;
+import auxiliar.Posicao;
 import java.awt.Graphics;
 import java.io.Serializable;
 
@@ -32,10 +33,19 @@ public class FogoR extends Personagem implements Serializable{
         if (moveCounter >= MOVE_INTERVAL) {
             moveCounter = 0; // Reset the counter
 
-            // Fogo is assumed to move right
-            if (!this.moveRight()) { // Attempts to move one cell to the right
-                // If moveRight() returns false (e.g., hit a boundary), remove the Fogo
-                Desenho.acessoATelaDoJogo().removePersonagem(this); //
+            Posicao currentPos = this.getPosicao();
+            Posicao potentialNextPos = new Posicao(currentPos.getLinha(), currentPos.getColuna());
+
+            boolean isNextCellWithinWorldBounds = potentialNextPos.moveRight();
+
+            if (isNextCellWithinWorldBounds) {
+                if (Desenho.acessoATelaDoJogo().ehPosicaoValida(potentialNextPos)) { //
+                    this.pPosicao.moveRight(); // This updates the actual position of Fogo
+                } else {
+                    Desenho.acessoATelaDoJogo().removePersonagem(this);
+                }
+            } else {
+                Desenho.acessoATelaDoJogo().removePersonagem(this);
             }
         }
     }

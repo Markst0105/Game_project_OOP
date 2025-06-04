@@ -3,7 +3,7 @@ package Controler;
 import Auxiliar.Desenho;
 import Modelo.Bomb;
 import Modelo.Button;
-import Modelo.CaveiraR;
+import Modelo.CannonR;
 import Modelo.Chaser;
 import Modelo.FinishPoint;
 import Modelo.FogoR;
@@ -153,7 +153,7 @@ public class ControleDeJogo {
                 }
             }
         } else if (other.isbMortal() || 
-                   other instanceof CaveiraR || 
+                   other instanceof CannonR || 
                    other instanceof FogoR || 
                    other instanceof Chaser) {
             
@@ -161,6 +161,9 @@ public class ControleDeJogo {
             if (!hero.isInvincible()) {
                 hero.loseLife();
                 heroTookDamage = true;
+                if(hero.getLives()==0){
+                    this.gameOver = true;
+                }
             }
         }
     }

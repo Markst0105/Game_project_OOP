@@ -12,21 +12,23 @@ import java.io.Serializable;
  *
  * @author marks
  */
-public class CaveiraL extends Personagem implements Serializable {
+public class CannonL extends Personagem implements Serializable {
     private int iContaIntervalos;
     private static final long serialVersionUID = 2L;
-    private static final int FIRE_INTERVAL = 15; // Adjust this value as needed
+    private int fireRate; // Adjust this value as needed
     
-    public CaveiraL(String sNomeImagePNG, int startRow, int startCol) {
+    public CannonL(String sNomeImagePNG, int fireRate, int startRow, int startCol) {
         super(sNomeImagePNG);
+        this.fireRate = fireRate;
         this.bTransponivel = false; // CaveiraL is not transponivel
         bMortal = true; // CaveiraL is mortal to the hero on contact
         setPosicao(startRow, startCol);
         this.iContaIntervalos = 0;
     }
 
-    public CaveiraL(String sNomeImagePNG) {
+    public CannonL(String sNomeImagePNG) {
         super(sNomeImagePNG);
+        this.fireRate = 20;
         this.bTransponivel = false; // CaveiraL is not transponivel
         bMortal = true; // CaveiraL is mortal to the hero on contact
         // pPosicao is (1,1) by default from Personagem constructor
@@ -38,7 +40,7 @@ public class CaveiraL extends Personagem implements Serializable {
         super.autoDesenho();
 
         this.iContaIntervalos++;
-        if (this.iContaIntervalos >= FIRE_INTERVAL) { // Use >= for robustness, though == Consts.TIMER is common
+        if (this.iContaIntervalos >= fireRate) { // Use >= for robustness, though == Consts.TIMER is common
             this.iContaIntervalos = 0;
             
             int fogoLinha = pPosicao.getLinha();
@@ -47,7 +49,7 @@ public class CaveiraL extends Personagem implements Serializable {
             // Create the left-moving FogoL projectile
             // The FogoL constructor will attempt to set its position.
             // If Posicao.setPosicao has been fixed (see step 3), this should work.
-            FogoL f = new FogoL("fire.png", fogoLinha, fogoColuna); 
+            FogoL f = new FogoL("fireCharge.png", fogoLinha, fogoColuna); 
             
             Desenho.acessoATelaDoJogo().addPersonagem(f);
         }

@@ -1,6 +1,7 @@
 package auxiliar;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Posicao implements Serializable {
     private int linha;
@@ -15,20 +16,17 @@ public class Posicao implements Serializable {
 
     public boolean setPosicao(int linha, int coluna) {
         // Prevent moving into walls (border positions)
-        if (linha <= 0 || linha >= Auxiliar.Consts.MUNDO_ALTURA - 1 || 
-            coluna <= 0 || coluna >= Auxiliar.Consts.MUNDO_LARGURA - 1) {
-            return false;
+        if (linha < 0 || linha >= Auxiliar.Consts.MUNDO_ALTURA) {
+            return false; // Row is out of bounds
+        }
+        if (coluna < 0 || coluna >= Auxiliar.Consts.MUNDO_LARGURA) {
+            return false; // Column is out of bounds
         }
 
-        // Original position validation
-        if (linha < 0 || linha >= Auxiliar.Consts.MUNDO_ALTURA)
-            return false;
-        linhaAnterior = this.linha;
+        // If checks pass, update position
+        this.linhaAnterior = this.linha;
+        this.colunaAnterior = this.coluna;
         this.linha = linha;
-
-        if (coluna < 0 || coluna >= Auxiliar.Consts.MUNDO_LARGURA)
-            return false;
-        colunaAnterior = this.coluna;
         this.coluna = coluna;
 
         return true;
@@ -36,6 +34,19 @@ public class Posicao implements Serializable {
 
     public int getLinha() {
         return linha;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Posicao pos = (Posicao) o;
+        return linha == pos.linha && coluna == pos.coluna;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(linha, coluna);
     }
 
     public boolean volta() {

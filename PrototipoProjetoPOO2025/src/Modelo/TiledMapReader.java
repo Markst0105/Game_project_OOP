@@ -61,7 +61,7 @@ public class TiledMapReader {
                 if (tileId != 0) {
                     String imageName = getImageForTileId(tileId);
                     if (layerName.equalsIgnoreCase("collision")) {
-                        gameObjects.add(createGameObject(imageName, x, y));
+                        gameObjects.add(createGameObject(imageName, y, x));
                     } else {
                         visualTiles.add(new VisualTile(imageName, x, y));
                     }

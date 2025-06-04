@@ -1,5 +1,5 @@
 import Controler.Tela;
-import Modelo.CaveiraR;
+import Modelo.CannonR;
 import Modelo.CharacterExporter;
 import Modelo.Door;
 import Modelo.Hero;

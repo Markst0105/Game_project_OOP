@@ -69,24 +69,12 @@ public class LevelLoader {
                 Hero hero = new Hero(image);
                 hero.setPosicao(position.getLinha(), position.getColuna());
                 return hero;
-            case "BichinhoVaiVemHorizontal":
-                BichinhoVaiVemHorizontal hEnemy = new BichinhoVaiVemHorizontal(image);
-                hEnemy.setPosicao(position.getLinha(), position.getColuna());
-                return hEnemy;
-            case "BichinhoVaiVemVertical":
-                BichinhoVaiVemVertical vEnemy = new BichinhoVaiVemVertical(image);
-                vEnemy.setPosicao(position.getLinha(), position.getColuna());
-                return vEnemy;
-            case "ZigueZague":
-                ZigueZague zzEnemy = new ZigueZague(image);
-                zzEnemy.setPosicao(position.getLinha(), position.getColuna());
-                return zzEnemy;
             case "CaveiraR":
-                CaveiraR skull = new CaveiraR(image);
+                CannonR skull = new CannonR(image);
                 skull.setPosicao(position.getLinha(), position.getColuna());
                 return skull;
             case "CaveiraL":
-                CaveiraL skull2 = new CaveiraL(image);
+                CannonL skull2 = new CannonL(image);
                 skull2.setPosicao(position.getLinha(), position.getColuna());
                 return skull2;
             case "Chaser":

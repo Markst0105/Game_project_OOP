@@ -1,20 +1,17 @@
 package Controler;
 
 import Modelo.Personagem;
-import Modelo.CaveiraR;
+import Modelo.CannonR;
 import Modelo.Hero;
 import Modelo.Chaser;
-import Modelo.BichinhoVaiVemHorizontal;
 import Auxiliar.Consts;
 import Auxiliar.Desenho;
-import Modelo.BichinhoVaiVemVertical;
 import Modelo.Button;
 import Modelo.CharacterExporter;
 import Modelo.CharacterImporter;
 import Modelo.Door;
 import Modelo.DragDropHandler;
 import Modelo.FinishPoint;
-import Modelo.ZigueZague;
 import Modelo.GameLevel;
 import Modelo.LevelLoader;
 import Modelo.LevelManager;
@@ -221,8 +218,13 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
     
     public void restartLevel() {
         gameCompleted = false;
-        currentLevel = 1;
+        cj = new ControleDeJogo(); // Reset game controller if needed
+
+        // Reload the level
         loadCurrentLevel();
+
+        // Force repaint
+        repaint();
     }
     
     private void showLevelCompleteMessage() {
@@ -346,9 +348,9 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
                         // Check if this is a border position
                         if (mapaLinha == 0 || mapaLinha == Consts.MUNDO_ALTURA - 1 ||
                             mapaColuna == 0 || mapaColuna == Consts.MUNDO_LARGURA - 1) {
-                            imageName = "Muro2.png";
+                            imageName = "blackTile.png";
                         } else {
-                            imageName = "Tela-Fase1.png";
+                            imageName = "blackTile.png";
                         }
 
                         Image newImage = Toolkit.getDefaultToolkit().getImage(
@@ -472,7 +474,7 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
         
         if(cj.isGameOver()){
             if (e.getKeyCode() == KeyEvent.VK_R){
-                restartGame();
+                restartLevel();
             }
             return;
         }
@@ -500,6 +502,9 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
             case KeyEvent.VK_RIGHT:
                 hero.moveRight();
                 break;
+            case KeyEvent.VK_M:
+                this.nextLevel();
+                break;
         }
         this.atualizaCamera();
         this.setTitle("-> Cell: " + (hero.getPosicao().getColuna()) + ", "
@@ -514,7 +519,7 @@ public class Tela extends javax.swing.JFrame implements KeyListener {
         cj = new ControleDeJogo(); // Reset game controller if needed
 
         // Reset to first level
-
+        this.currentLevel = 1;
 
         // Reload the level
         loadCurrentLevel();

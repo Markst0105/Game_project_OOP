@@ -6,21 +6,23 @@ import Controler.Tela;
 import java.awt.Graphics;
 import java.io.Serializable;
 
-public class CaveiraR extends Personagem implements Serializable{
+public class CannonR extends Personagem implements Serializable{
     private int iContaIntervalos;
     private static final long serialVersionUID = 1L;
-    private static final int FIRE_INTERVAL = 20; // Adjust this value as needed
+    private int fireRate; // Adjust this value as needed
     
-    public CaveiraR(String sNomeImagePNG, int startRow, int startCol) {
+    public CannonR(String sNomeImagePNG, int fireRate, int startRow, int startCol) {
         super(sNomeImagePNG);
         this.bTransponivel = false;
+        this.fireRate = fireRate;
         bMortal = true;
         setPosicao(startRow, startCol);
         this.iContaIntervalos = 0;
     }
 
-    public CaveiraR(String sNomeImagePNG) {
+    public CannonR(String sNomeImagePNG) {
         super(sNomeImagePNG);
+        this.fireRate = 20;
         this.bTransponivel = false;
         bMortal = true;
         this.iContaIntervalos = 0;
@@ -32,9 +34,9 @@ public class CaveiraR extends Personagem implements Serializable{
         super.autoDesenho();
 
         this.iContaIntervalos++;
-        if(this.iContaIntervalos == FIRE_INTERVAL){
+        if(this.iContaIntervalos == fireRate){
             this.iContaIntervalos = 0;
-            FogoR f = new FogoR("fire.png");
+            FogoR f = new FogoR("fireCharge.png");
             f.setPosicao(pPosicao.getLinha(),pPosicao.getColuna()+1);
             Desenho.acessoATelaDoJogo().addPersonagem(f);
         }
