@@ -28,7 +28,7 @@ public class CannonL extends Personagem implements Serializable {
 
     public CannonL(String sNomeImagePNG) {
         super(sNomeImagePNG);
-        this.fireRate = 20;
+        this.fireRate = 25;
         this.bTransponivel = false; // CaveiraL is not transponivel
         bMortal = true; // CaveiraL is mortal to the hero on contact
         // pPosicao is (1,1) by default from Personagem constructor

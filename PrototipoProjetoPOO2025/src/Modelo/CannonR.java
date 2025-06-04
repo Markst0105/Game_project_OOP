@@ -22,7 +22,7 @@ public class CannonR extends Personagem implements Serializable{
 
     public CannonR(String sNomeImagePNG) {
         super(sNomeImagePNG);
-        this.fireRate = 20;
+        this.fireRate = 25;
         this.bTransponivel = false;
         bMortal = true;
         this.iContaIntervalos = 0;

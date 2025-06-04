@@ -286,21 +286,21 @@ public class LevelManager {
                 faseAtual.add(new Bomb("tnt.png", 38, 26));
 
 
-                faseAtual.add(new CannonR("cannonR.png", 20, 1, 2));
-                faseAtual.add(new CannonL("cannonL.png", 20, 7, 8));
+                faseAtual.add(new CannonR("cannonR.png", 22, 1, 2));
+                faseAtual.add(new CannonL("cannonL.png", 22, 7, 8));
                 faseAtual.add(new CannonL("cannonL.png", 45, 1, 18));
                 faseAtual.add(new CannonL("cannonL.png", 45, 18, 28));
-                faseAtual.add(new CannonR("cannonR.png", 15, 17, 20));
-                faseAtual.add(new CannonR("cannonR.png", 15, 12, 20));
-                faseAtual.add(new CannonL("cannonL.png", 15, 10, 28));
-                faseAtual.add(new CannonR("cannonR.png", 15, 8, 20));
-                faseAtual.add(new CannonL("cannonL.png", 15, 5, 28));
-                faseAtual.add(new CannonR("cannonR.png", 15, 3, 20));
-                faseAtual.add(new CannonR("cannonR.png", 15, 2, 20));
-                faseAtual.add(new CannonR("cannonR.png", 15, 15, 30));
-                faseAtual.add(new CannonL("cannonL.png", 15, 19, 38));
-                faseAtual.add(new CannonR("cannonR.png", 20, 21, 21));
-                faseAtual.add(new CannonR("cannonR.png", 20, 26, 21));
+                faseAtual.add(new CannonR("cannonR.png", 20, 17, 20));
+                faseAtual.add(new CannonR("cannonR.png", 20, 12, 20));
+                faseAtual.add(new CannonL("cannonL.png", 20, 10, 28));
+                faseAtual.add(new CannonR("cannonR.png", 20, 8, 20));
+                faseAtual.add(new CannonL("cannonL.png", 20, 5, 28));
+                faseAtual.add(new CannonR("cannonR.png", 20, 3, 20));
+                faseAtual.add(new CannonR("cannonR.png", 20, 2, 20));
+                faseAtual.add(new CannonR("cannonR.png", 22, 15, 30));
+                faseAtual.add(new CannonL("cannonL.png", 22, 19, 38));
+                faseAtual.add(new CannonR("cannonR.png", 22, 21, 21));
+                faseAtual.add(new CannonR("cannonR.png", 22, 26, 21));
                 faseAtual.add(new CannonL("cannonL.png", 20, 29, 28));
 
                 Door door7 = new Door("trapdoor.png", 7, 8, 9);
