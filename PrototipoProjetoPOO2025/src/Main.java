@@ -11,9 +11,10 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 //        List<Personagem> charsToExport = new ArrayList<>();
-//        charsToExport.add(new Bomb("tnt.png"));
-//        CharacterExporter.exportCharacters(charsToExport, "bomb.zip");
-   
+//        charsToExport.add(new CannonR("CanhaoD.png"));
+//        CharacterExporter.exportCharacters(charsToExport, "canhaoD.zip");
+            
+        // only used to create a zip file containing one character
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
