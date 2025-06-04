@@ -1,0 +1,375 @@
+@startuml
+skinparam classAttributeIconSize 0
+class Chaser{
+- iDirectionV : boolean
+- iDirectionH : boolean
+- {static} serialVersionUID : long
+- moveCounter : int
+- speedDelay : int
++ Chaser(sNomeImagePNG : String, startRow : int, startCol : int)
++ Chaser(sNomeImagePNG : String)
++ getSpeed() : int
++ computeDirection(heroPos : Posicao) : void
++ autoDesenho() : void
+}
+Chaser ..|> Serializable
+Chaser --|> Personagem
+class BichinhoVaiVemVertical{
+bUp : boolean
+- {static} serialVersionUID : long
++ BichinhoVaiVemVertical(sNomeImagePNG : String, startRow : int, startCol : int)
++ BichinhoVaiVemVertical(sNomeImagePNG : String)
++ autoDesenho() : void
+}
+BichinhoVaiVemVertical --|> Personagem
+class Bomb{
+- {static} serialVersionUID : long
+- {static} EXPLOSION_IMAGE_NAME : String
+- {static} EXPLOSION_DURATION_MS : long
+- exploded : boolean
+- explosionEndTime : long
+- vanished : boolean
++ Bomb(sNomeImagePNG : String, startRow : int, startCol : int)
++ Bomb(sNomeImagePNG : String)
++ explode() : void
++ isExploded() : boolean
++ hasVanished() : boolean
++ autoDesenho() : void
+}
+Bomb ..|> Serializable
+Bomb --|> Personagem
+class Posicao{
+- linha : int
+- coluna : int
+- linhaAnterior : int
+- colunaAnterior : int
++ Posicao(linha : int, coluna : int)
++ setPosicao(linha : int, coluna : int) : boolean
++ getLinha() : int
++ volta() : boolean
++ getColuna() : int
++ igual(posicao : Posicao) : boolean
++ copia(posicao : Posicao) : boolean
++ moveUp() : boolean
++ moveDown() : boolean
++ moveRight() : boolean
++ moveLeft() : boolean
+}
+Posicao ..|> Serializable
+class CaveiraR{
+- iContaIntervalos : int
+- {static} serialVersionUID : long
+- {static} FIRE_INTERVAL : int
++ CaveiraR(sNomeImagePNG : String, startRow : int, startCol : int)
++ CaveiraR(sNomeImagePNG : String)
++ autoDesenho() : void
+}
+CaveiraR ..|> Serializable
+CaveiraR --|> Personagem
+class Personagem{
+# iImage : ImageIcon
+# pPosicao : Posicao
+# bTransponivel : boolean
+# bMortal : boolean
+# Personagem(sNomeImagePNG : String)
++ isbMortal() : boolean
++ getPosicao() : Posicao
++ isbTransponivel() : boolean
++ setbTransponivel(bTransponivel : boolean) : void
++ autoDesenho() : void
++ setPosicao(linha : int, coluna : int) : boolean
++ moveUp() : boolean
++ moveDown() : boolean
++ moveRight() : boolean
++ moveLeft() : boolean
+}
+Personagem ..|> Serializable
+class VisualTile{
+- imageName : String
+- x : int
+- cachedImage : Image
++ VisualTile(imageName : String, x : int, y : int)
++ draw(g : Graphics, cameraX : int, cameraY : int, cellSize : int) : void
+}
+class Desenho{
+{static} jCenario : Tela
++ {static} setCenario(umJCenario : Tela) : void
++ {static} acessoATelaDoJogo() : Tela
++ {static} getGraphicsDaTela() : Graphics
++ {static} desenhar(iImage : ImageIcon, iColuna : int, iLinha : int) : void
+}
+Desenho ..|> Serializable
+class SaveState{
+- {static} serialVersionUID : long
+- currentLevel : int
+- heroState : Hero
+- heroLives : int
++ SaveState(currentLevel : int, hero : Hero)
++ getCurrentLevel() : int
++ getHeroState() : Hero
++ getHeroLives() : int
+}
+SaveState ..|> Serializable
+class Floor{
+- {static} serialVersionUID : long
++ Floor(image : String, row : int, col : int)
++ Floor(image : String)
+}
+Floor ..|> Serializable
+Floor --|> Personagem
+class GameLevel{
+- levelNumber : int
+- elements : ArrayList<Personagem>
+- heroStartPosition : Posicao
++ GameLevel(number : int)
++ addElement(p : Personagem) : void
++ getElements() : ArrayList<Personagem>
++ getLevelNumber() : int
++ getHeroStartPosition() : Posicao
+}
+GameLevel ..|> Serializable
+class Button{
+- linkedDoors : List<Door>
+- isPressed : boolean
+- {static} serialVersionUID : long
++ Button(sNomeImagePNG : String)
++ Button(sNomeImagePNG : String, startRow : int, startCol : int)
++ addLinkedDoor(door : Door) : void
++ activate() : void
++ deactivate() : void
+- updateButtonImage() : void
++ isPressed() : boolean
+}
+Button ..|> Serializable
+Button --|> Personagem
+class LevelLoader{
+- {static} LEVELS_DIR : String
++ {static} loadLevelFromJSON(filePath : String) : GameLevel
++ {static} loadLevel(levelNumber : int) : GameLevel
+- {static} createCharacter(type : String, image : String, position : Posicao) : Personagem
+}
+class CaveiraL{
+- iContaIntervalos : int
+- {static} serialVersionUID : long
+- {static} FIRE_INTERVAL : int
++ CaveiraL(sNomeImagePNG : String, startRow : int, startCol : int)
++ CaveiraL(sNomeImagePNG : String)
++ autoDesenho() : void
+}
+CaveiraL ..|> Serializable
+CaveiraL --|> Personagem
+class LevelManager{
+- {static} LEVELS_DIR : String
+- {static} MAPS_DIR : String
+- {static} LEVEL_INFO_FILE : String
+- {static} totalLevels : int
++ {static} getTotalLevels() : int
++ {static} loadLevel(levelNumber : int, faseAtual : ArrayList<Personagem>) : void
+- {static} getLevelInfo(levelNumber : int) : JSONObject
+- {static} loadTiledMap(mapPath : String, faseAtual : List<Personagem>) : void
+- {static} loadTileLayer(layer : JSONObject, faseAtual : List<Personagem>) : void
+- {static} addLevelCharacters(levelNumber : int, faseAtual : ArrayList<Personagem>) : void
+- initializeDefaultLevels() : void
+}
+class TiledMapReader{
+- {static} visualTiles : List<VisualTile>
+- {static} tileIdToImageMap : Map<Integer,String>
+- {static} mapJson : JSONObject
++ {static} loadMap(filePath : String, gameObjects : ArrayList<Personagem>) : void
+- {static} loadTilesetMappings() : void
+- {static} processLayer(layer : JSONObject, gameObjects : ArrayList<Personagem>) : void
+- {static} getImageForTileId(tileId : int) : String
+- {static} createGameObject(imageName : String, x : int, y : int) : Personagem
++ {static} getVisualTiles() : List<VisualTile>
++ {static} clearVisualTiles() : void
+}
+class Wall{
+- {static} serialVersionUID : long
++ Wall(sNomeImagePNG : String)
++ Wall(sNomeImagePNG : String, startRow : int, startCol : int)
++ autoDesenho() : void
+}
+Wall ..|> Serializable
+Wall --|> Personagem
+class Consts{
++ {static} CELL_SIDE : int
++ {static} RES : int
++ {static} MUNDO_LARGURA : int
++ {static} MUNDO_ALTURA : int
++ {static} PERIOD : int
++ {static} PATH : String
++ {static} TIMER : int
+}
+class ZigueZague{
+- {static} serialVersionUID : long
++ ZigueZague(sNomeImagePNG : String, startRow : int, startCol : int)
++ ZigueZague(sNomeImagePNG : String)
++ autoDesenho() : void
+}
+ZigueZague --|> Personagem
+class CharacterExporter{
++ {static} exportCharacters(characters : List<Personagem>, zipPath : String) : void
+}
+class CharacterImporter{
++ {static} importFromZip(zipPath : String, dropRow : int, dropCol : int) : List<Personagem>
+}
+class Hero{
+- lives : int
+- isInvincible : boolean
+- invincibleEndTime : long
+- {static} INVINCIBILITY_DURATION : long
+- {static} serialVersionUID : long
++ Hero(sNomeImagePNG : String, startRow : int, startCol : int)
++ Hero(sNomeImagePNG : String)
++ startInvincibility() : void
++ isInvincible() : boolean
++ getLives() : int
++ loseLife() : void
++ setLives(lives : int) : void
++ isAlive() : boolean
++ voltaAUltimaPosicao() : void
++ setPosicao(linha : int, coluna : int) : boolean
+- validaPosicao() : boolean
++ moveUp() : boolean
++ moveDown() : boolean
++ moveRight() : boolean
++ moveLeft() : boolean
+}
+Hero ..|> Serializable
+Hero --|> Personagem
+class FogoR{
+- {static} serialVersionUID : long
+- moveCounter : int
+- {static} MOVE_INTERVAL : int
++ FogoR(sNomeImagePNG : String, startRow : int, startCol : int)
++ FogoR(sNomeImagePNG : String)
++ autoDesenho() : void
+}
+FogoR ..|> Serializable
+FogoR --|> Personagem
+class ControleDeJogo{
+- gameOver : boolean
++ isGameOver() : boolean
++ desenhaTudo(e : ArrayList<Personagem>) : void
++ processaTudo(umaFase : ArrayList<Personagem>) : void
+- handleCollision(hero : Hero, other : Personagem) : void
++ ehPosicaoValida(umaFase : ArrayList<Personagem>, p : Posicao) : boolean
+}
+class FogoL{
+- {static} serialVersionUID : long
+- moveCounter : int
+- {static} MOVE_INTERVAL : int
++ FogoL(sNomeImagePNG : String)
++ FogoL(sNomeImagePNG : String, startRow : int, startCol : int)
++ autoDesenho() : void
+}
+FogoL ..|> Serializable
+FogoL --|> Personagem
+class DragDropHandler{
+- tela : Tela
++ DragDropHandler(tela : Tela)
++ drop(dtde : DropTargetDropEvent) : void
++ dragEnter(dtde : DropTargetDragEvent) : void
++ dragOver(dtde : DropTargetDragEvent) : void
++ dropActionChanged(dtde : DropTargetDragEvent) : void
++ dragExit(dte : DropTargetEvent) : void
+}
+DragDropHandler ..|> DropTargetListener
+DragDropHandler --|> TransferHandler
+class FinishPoint{
++ FinishPoint(sNomeImagePNG : String)
++ FinishPoint(sNomeImagePNG : String, startRow : int, startCol : int)
+}
+FinishPoint ..|> Serializable
+FinishPoint --|> Personagem
+class Main{
++ {static} main(args : String[]) : void
+}
+class BichinhoVaiVemHorizontal{
+- bRight : boolean
+iContador : int
+- {static} serialVersionUID : long
++ BichinhoVaiVemHorizontal(sNomeImagePNG : String, startRow : int, startCol : int)
++ BichinhoVaiVemHorizontal(sNomeImagePNG : String)
++ autoDesenho() : void
+}
+BichinhoVaiVemHorizontal ..|> Serializable
+BichinhoVaiVemHorizontal --|> Personagem
+class Tela{
+- hero : Hero
+- faseAtual : ArrayList<Personagem>
+- cj : ControleDeJogo
+- g2 : Graphics
+- cameraLinha : int
+- cameraColuna : int
+- levels : ArrayList<GameLevel>
+- currentLevel : int
+- allLevels : ArrayList<GameLevel>
+- currentLevelIndex : int
+- gameCompleted : boolean
+- personagensToAdd : List<Personagem>
+- personagensToRemove : List<Personagem>
++ Tela()
+- loadCurrentLevel() : void
++ addPersonagem(umPersonagem : Personagem) : void
++ removePersonagem(umPersonagem : Personagem) : void
++ getFaseAtual() : List<Personagem>
++ addCharacters(characters : List<Personagem>) : void
++ clearFaseAtual() : void
+- findHero() : Hero
+- loadLevel(levelIndex : int) : void
+- saveGame() : void
+- loadGame() : void
++ nextLevel() : void
++ restartLevel() : void
+- showLevelCompleteMessage() : void
+- showGameCompleteMessage() : void
+- loadScenarioMap() : void
++ initLevel() : void
++ getCameraLinha() : int
++ getCameraColuna() : int
++ ehPosicaoValida(p : Posicao) : boolean
++ getGraphicsBuffer() : Graphics
++ paint(gOld : Graphics) : void
+- drawLivesCounter(g : Graphics) : void
+- drawGameCompleteScreen(g : Graphics) : void
+- atualizaCamera() : void
++ go() : void
++ keyPressed(e : KeyEvent) : void
+- restartGame() : void
+- initComponents() : void
++ mouseMoved(e : MouseEvent) : void
++ mouseClicked(e : MouseEvent) : void
++ mouseReleased(e : MouseEvent) : void
++ mouseEntered(e : MouseEvent) : void
++ mouseExited(e : MouseEvent) : void
++ mouseDragged(e : MouseEvent) : void
++ keyTyped(e : KeyEvent) : void
++ keyReleased(e : KeyEvent) : void
+}
+Tela ..|> KeyListener
+Tela --|> JFrame
+class Door{
+- isOpen : boolean
+- closedImage : String
+- openImage : String
+- doorId : int
+- {static} serialVersionUID : long
++ Door(sNomeImagePNG : String, doorId : int)
++ Door(sNomeImagePNG : String, doorId : int, startRow : int, startCol : int)
++ open() : void
++ close() : void
+- updateImage() : void
++ isOpen() : boolean
++ getDoorId() : int
+}
+Door ..|> Serializable
+Door --|> Personagem
+Personagem--"# pPosicao" Posicao
+Desenho--"{static} jCenario" Tela
+SaveState--"- heroState" Hero
+GameLevel--"- heroStartPosition" Posicao
+DragDropHandler--"- tela" Tela
+Tela--"- hero" Hero
+Tela--"- cj" ControleDeJogo
+@enduml
